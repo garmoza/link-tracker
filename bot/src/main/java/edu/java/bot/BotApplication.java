@@ -10,5 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 public class BotApplication {
     public static void main(String[] args) {
         SpringApplication.run(BotApplication.class, args);
+        Bot bot = new Bot();
+        bot.start();
     }
 }
