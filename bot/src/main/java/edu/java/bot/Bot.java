@@ -22,11 +22,9 @@ public class Bot implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-        for (Update update : updates) {
-            if (update.message() != null) {
-                var request = responseService.getResponseRequest(update.message());
-                bot.execute(request);
-            }
+        for (var update : updates) {
+            var request = responseService.getResponseRequest(update);
+            bot.execute(request);
         }
 
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
