@@ -53,10 +53,15 @@ public class Bot implements UpdatesListener {
     }
 
     private void processCommand(Update update) {
+        boolean isSupported = false;
         for (var command : commands) {
             if (command.supports(update)) {
+                isSupported = true;
                 bot.execute(command.handle(update));
             }
+        }
+        if (!isSupported) {
+            bot.execute(new SendMessage(update.message().chat().id(), "Command not supported."));
         }
     }
 
