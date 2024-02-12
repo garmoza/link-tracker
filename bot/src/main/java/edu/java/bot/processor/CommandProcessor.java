@@ -1,8 +1,11 @@
 package edu.java.bot.processor;
 
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.AbstractSendRequest;
+
 public interface CommandProcessor {
 
-    void process(String command);
+    AbstractSendRequest<?> process(Update update);
 
     void nextCommandProcessor(CommandProcessor nextProcessor);
 }

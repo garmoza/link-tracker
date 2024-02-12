@@ -1,16 +1,23 @@
 package edu.java.bot.service;
 
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.processor.CommandProcessor;
 import edu.java.bot.processor.HelpCommandProcessor;
 import edu.java.bot.processor.ListCommandProcessor;
 import edu.java.bot.processor.StartCommandProcessor;
 import edu.java.bot.processor.TrackCommandProcessor;
 import edu.java.bot.processor.UntrackCommandProcessor;
+import edu.java.bot.repository.UserRepository;
 
 public class ResponseService {
+
+    private final UserRepository userRepository;
+
+    public ResponseService() {
+        this.userRepository = new UserRepository();
+    }
 
     public AbstractSendRequest<?> getResponseRequest(Update update) {
         if (update.message().text().startsWith("/")) {
@@ -20,7 +27,7 @@ public class ResponseService {
     }
 
     private AbstractSendRequest<?> processCommand(Update update) {
-        var startProcessor = new StartCommandProcessor();
+        var startProcessor = new StartCommandProcessor(userRepository);
         var helpProcessor = new HelpCommandProcessor();
         var trackProcessor = new TrackCommandProcessor();
         var untrackProcessor = new UntrackCommandProcessor();
@@ -31,9 +38,7 @@ public class ResponseService {
         trackProcessor.nextCommandProcessor(untrackProcessor);
         untrackProcessor.nextCommandProcessor(listProcessor);
 
-        startProcessor.process(update.message().text());
-
-        return new SendMessage(update.message().chat().id(), "Process command...");
+        return startProcessor.process(update);
     }
 
     private AbstractSendRequest<?> processMessage(Update update) {
