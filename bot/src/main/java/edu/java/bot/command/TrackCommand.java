@@ -2,7 +2,6 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
-import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
@@ -28,7 +27,7 @@ public class TrackCommand implements Command {
     }
 
     @Override
-    public AbstractSendRequest<?> handle(Update update) {
+    public SendMessage handle(Update update) {
         long chatId = update.message().chat().id();
         long userId = update.message().from().id();
         String[] params = update.message().text().split(" ");

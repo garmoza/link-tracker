@@ -2,7 +2,6 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
-import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
@@ -29,7 +28,7 @@ public class StartCommand implements Command {
     }
 
     @Override
-    public AbstractSendRequest<?> handle(Update update) {
+    public SendMessage handle(Update update) {
         long userId = update.message().from().id();
         boolean isNewUser = userRepository.findUserById(userId).isEmpty();
         if (isNewUser) {
@@ -38,7 +37,7 @@ public class StartCommand implements Command {
         return getStartMessage(update);
     }
 
-    private AbstractSendRequest<?> getStartMessage(Update update) {
+    private SendMessage getStartMessage(Update update) {
         String name = update.message().from().firstName();
         StringBuilder message = new StringBuilder();
         message.append("""

@@ -2,7 +2,7 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.AbstractSendRequest;
+import com.pengrad.telegrambot.request.SendMessage;
 
 public interface Command {
 
@@ -14,7 +14,7 @@ public interface Command {
         return update.message().text().startsWith(command());
     }
 
-    AbstractSendRequest<?> handle(Update update);
+    SendMessage handle(Update update);
 
     default BotCommand toApiCommand() {
         return new BotCommand(command(), description());
