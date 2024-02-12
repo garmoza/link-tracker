@@ -13,6 +13,7 @@ import edu.java.bot.command.StartCommand;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UntrackCommand;
 import edu.java.bot.repository.UserRepository;
+import edu.java.bot.repository.UserRepositoryImpl;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Bot implements UpdatesListener {
 
     public Bot() {
         bot = new TelegramBot(System.getenv("TELEGRAM_API_KEY"));
-        userRepository = new UserRepository();
+        userRepository = new UserRepositoryImpl();
 
         commands = new ArrayList<>();
         commands.add(new HelpCommand(commands));

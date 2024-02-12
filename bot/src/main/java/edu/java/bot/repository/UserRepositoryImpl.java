@@ -1,0 +1,24 @@
+package edu.java.bot.repository;
+
+import edu.java.bot.entity.User;
+import java.util.HashMap;
+import java.util.Optional;
+
+public class UserRepositoryImpl implements UserRepository {
+
+    private final HashMap<Long, User> users;
+
+    public UserRepositoryImpl() {
+        users = new HashMap<>();
+    }
+
+    @Override
+    public Optional<User> findUserById(long id) {
+        return users.containsKey(id) ? Optional.of(users.get(id)) : Optional.empty();
+    }
+
+    @Override
+    public void saveUser(User user) {
+        users.put(user.getId(), user);
+    }
+}
