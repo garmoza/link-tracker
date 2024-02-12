@@ -28,10 +28,10 @@ public class Bot implements UpdatesListener {
 
         commands = new ArrayList<>();
         commands.add(new HelpCommand(commands));
-        commands.add(new ListCommand());
-        commands.add(new StartCommand(commands, userRepository));
-        commands.add(new TrackCommand());
-        commands.add(new UntrackCommand());
+        commands.add(new ListCommand(userRepository));
+        commands.add(new StartCommand(userRepository, commands));
+        commands.add(new TrackCommand(userRepository));
+        commands.add(new UntrackCommand(userRepository));
     }
 
     public void start() {

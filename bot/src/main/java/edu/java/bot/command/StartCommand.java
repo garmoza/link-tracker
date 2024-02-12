@@ -10,12 +10,12 @@ import java.util.List;
 
 public class StartCommand implements Command {
 
-    private final List<Command> commands;
     private final UserRepository userRepository;
+    private final List<Command> commands;
 
-    public StartCommand(List<Command> commands, UserRepository userRepository) {
-        this.commands = commands;
+    public StartCommand(UserRepository userRepository, List<Command> commands) {
         this.userRepository = userRepository;
+        this.commands = commands;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class StartCommand implements Command {
 
     @Override
     public String description() {
-        return "display all available commands";
+        return "register a user";
     }
 
     @Override
@@ -43,10 +43,10 @@ public class StartCommand implements Command {
         StringBuilder message = new StringBuilder();
         message.append("""
             Hello, *%s*!
-            You are successfully registered. Pls use commands:
+            You are successfully registered. Pls, use commands:
             """.formatted(name));
         for (var command : commands) {
-            message.append("- *%s* - %s.\n".formatted(command.command(), command.description()));
+            message.append("*%s* - %s.\n".formatted(command.command(), command.description()));
         }
         return new SendMessage(update.message().chat().id(), message.toString())
             .parseMode(ParseMode.Markdown);

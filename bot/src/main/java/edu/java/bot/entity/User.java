@@ -1,11 +1,9 @@
 package edu.java.bot.entity;
 
-import lombok.Getter;
-import lombok.Setter;
 import java.util.HashSet;
+import lombok.Getter;
 
 @Getter
-@Setter
 public class User {
 
     private long id;
