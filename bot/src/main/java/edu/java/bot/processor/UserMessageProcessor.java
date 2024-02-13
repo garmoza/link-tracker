@@ -5,11 +5,11 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.Command;
 import java.util.List;
 
-public class MessageProcessor {
+public class UserMessageProcessor {
 
     private final List<Command> commands;
 
-    public MessageProcessor(List<Command> commands) {
+    public UserMessageProcessor(List<Command> commands) {
         this.commands = commands;
     }
 

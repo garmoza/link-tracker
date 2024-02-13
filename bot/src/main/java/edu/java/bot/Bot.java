@@ -12,7 +12,7 @@ import edu.java.bot.command.StartCommand;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UntrackCommand;
 import edu.java.bot.configuration.ApplicationConfig;
-import edu.java.bot.processor.MessageProcessor;
+import edu.java.bot.processor.UserMessageProcessor;
 import edu.java.bot.repository.UserRepository;
 import edu.java.bot.repository.UserRepositoryImpl;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class Bot implements UpdatesListener {
 
     private final TelegramBot bot;
     private final List<Command> commands;
-    private final MessageProcessor messageProcessor;
+    private final UserMessageProcessor messageProcessor;
 
     public Bot() {
         ApplicationConfig appConfig = new ApplicationConfig(System.getenv("TELEGRAM_API_KEY"));
@@ -36,7 +36,7 @@ public class Bot implements UpdatesListener {
         commands.add(new TrackCommand(userRepository));
         commands.add(new UntrackCommand(userRepository));
 
-        messageProcessor = new MessageProcessor(commands);
+        messageProcessor = new UserMessageProcessor(commands);
     }
 
     public void start() {

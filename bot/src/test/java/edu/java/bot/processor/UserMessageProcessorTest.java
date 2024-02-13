@@ -12,11 +12,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class MessageProcessorTest {
+class UserMessageProcessorTest {
 
     @Test
     void process_ProcessText() {
-        MessageProcessor messageProcessor = new MessageProcessor(List.of());
+        UserMessageProcessor messageProcessor = new UserMessageProcessor(List.of());
 
         Update updateMock = MockUpdateUtils.getUpdateMock("Test message without command", 1L);
         SendMessage actualMessage = messageProcessor.process(updateMock);
@@ -30,7 +30,7 @@ class MessageProcessorTest {
         Command command = Mockito.mock(Command.class);
         when(command.supports(any(Update.class))).thenReturn(true);
         when(command.handle(any(Update.class))).thenReturn(new SendMessage(1L, "Text"));
-        MessageProcessor messageProcessor = new MessageProcessor(List.of(command));
+        UserMessageProcessor messageProcessor = new UserMessageProcessor(List.of(command));
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/command param1 param2", 1L);
         messageProcessor.process(updateMock);
@@ -42,7 +42,7 @@ class MessageProcessorTest {
     void process_ProcessCommand_CommandNotSupported() {
         Command command = Mockito.mock(Command.class);
         when(command.supports(any(Update.class))).thenReturn(false);
-        MessageProcessor messageProcessor = new MessageProcessor(List.of(command));
+        UserMessageProcessor messageProcessor = new UserMessageProcessor(List.of(command));
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/command param1 param2", 1L);
         SendMessage actualMessage = messageProcessor.process(updateMock);
