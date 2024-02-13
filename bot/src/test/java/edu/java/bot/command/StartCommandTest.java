@@ -4,6 +4,8 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
+import edu.java.bot.mock.CommandMockUtils;
+import edu.java.bot.mock.UpdateMockUtils;
 import edu.java.bot.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +43,12 @@ class StartCommandTest {
 
     @Test
     void handleWithCommands() {
-        Command command1 = CommandMocks.getCommandMock("/command", "description of command");
-        Command command2 = CommandMocks.getCommandMock("/another", "another description");
+        Command command1 = CommandMockUtils.getCommandMock("/command", "description of command");
+        Command command2 = CommandMockUtils.getCommandMock("/another", "another description");
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
         Command startCommand = new StartCommand(userRepository, List.of(command1, command2));
 
-        Update updateMock = CommandMocks.getUpdateMock(1L, 2L, "Bob");
+        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """
@@ -64,7 +66,7 @@ class StartCommandTest {
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
         Command startCommand = new StartCommand(userRepository, List.of());
 
-        Update updateMock = CommandMocks.getUpdateMock(1L, 2L, "Bob");
+        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """
@@ -82,7 +84,7 @@ class StartCommandTest {
         Command startCommand = new StartCommand(userRepository, commands);
         commands.add(startCommand);
 
-        Update updateMock = CommandMocks.getUpdateMock(1L, 2L, "Bob");
+        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """

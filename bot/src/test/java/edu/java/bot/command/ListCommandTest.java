@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
+import edu.java.bot.mock.UpdateMockUtils;
 import edu.java.bot.repository.UserRepository;
 import java.util.Optional;
 import java.util.Set;
@@ -43,7 +44,7 @@ class ListCommandTest {
         when(userRepository.findUserById(2L)).thenReturn(Optional.empty());
         Command listCommand = new ListCommand(userRepository);
 
-        Update updateMock = CommandMocks.getUpdateMock(1L, 2L);
+        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, "User is not registered.");
@@ -55,7 +56,7 @@ class ListCommandTest {
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
         Command listCommand = new ListCommand(userRepository);
 
-        Update updateMock = CommandMocks.getUpdateMock(1L, 2L);
+        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, "There are no tracked links.");
@@ -71,7 +72,7 @@ class ListCommandTest {
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(user));
         Command listCommand = new ListCommand(userRepository);
 
-        Update updateMock = CommandMocks.getUpdateMock(1L, 2L);
+        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """
