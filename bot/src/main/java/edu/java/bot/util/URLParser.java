@@ -7,6 +7,9 @@ import java.net.URL;
 
 public class URLParser {
 
+    private URLParser() {
+    }
+
     public static URL parse(String url) {
         try {
             return new URI(url).toURL();
