@@ -45,7 +45,7 @@ public class StartCommand implements Command {
             You are successfully registered. Pls, use commands:
             """.formatted(name));
         for (var command : commands) {
-            message.append("*%s* - %s.\n".formatted(command.command(), command.description()));
+            message.append("- %s - %s.\n".formatted(command.command(), command.description()));
         }
         return new SendMessage(update.message().chat().id(), message.toString())
             .parseMode(ParseMode.Markdown);

@@ -5,10 +5,9 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
-import java.util.Optional;
 import java.util.Set;
 
-public class UntrackCommand implements Command {
+public class UntrackCommand extends AuthorizedCommand {
 
     private final UserRepository userRepository;
 
@@ -27,26 +26,15 @@ public class UntrackCommand implements Command {
     }
 
     @Override
-    public SendMessage handle(Update update) {
+    SendMessage authorizedHandle(Update update, User user) {
         long chatId = update.message().chat().id();
-        long userId = update.message().from().id();
         String[] params = update.message().text().split(" ");
 
-        Optional<User> userOptional = userRepository.findUserById(userId);
-        if (userOptional.isEmpty()) {
-            return new SendMessage(chatId, "User is not registered.");
-        }
-
-        if (params.length == 1) {
+        if (params.length != 2) {
             return new SendMessage(chatId, "Pls, enter the command in *" + command() + " link* format.")
                 .parseMode(ParseMode.Markdown);
         }
 
-        if (params.length != 2) {
-            return new SendMessage(chatId, "Not valid format of " + command() + " command.");
-        }
-
-        User user = userOptional.get();
         Set<String> links = user.getLinks();
 
         if (!links.contains(params[1])) {
@@ -56,5 +44,10 @@ public class UntrackCommand implements Command {
         links.remove(params[1]);
         return new SendMessage(chatId, "Link *" + params[1] + "* no longer tracked.")
             .parseMode(ParseMode.Markdown);
+    }
+
+    @Override
+    UserRepository getUserRepository() {
+        return userRepository;
     }
 }

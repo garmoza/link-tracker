@@ -1,6 +1,7 @@
 package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
@@ -46,6 +47,7 @@ public class ListCommand implements Command {
         for (var link : links) {
             message.append("- %s\n".formatted(link));
         }
-        return new SendMessage(chatId, message.toString());
+        return new SendMessage(chatId, message.toString())
+            .parseMode(ParseMode.Markdown);
     }
 }
