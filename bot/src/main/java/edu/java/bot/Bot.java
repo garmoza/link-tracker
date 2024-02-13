@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.command.Command;
 import edu.java.bot.command.HelpCommand;
@@ -12,6 +11,7 @@ import edu.java.bot.command.ListCommand;
 import edu.java.bot.command.StartCommand;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UntrackCommand;
+import edu.java.bot.processor.MessageProcessor;
 import edu.java.bot.repository.UserRepository;
 import edu.java.bot.repository.UserRepositoryImpl;
 import java.util.ArrayList;
@@ -22,6 +22,7 @@ public class Bot implements UpdatesListener {
     private final TelegramBot bot;
     private final UserRepository userRepository;
     private final List<Command> commands;
+    private final MessageProcessor messageProcessor;
 
     public Bot() {
         bot = new TelegramBot(System.getenv("TELEGRAM_API_KEY"));
@@ -33,6 +34,8 @@ public class Bot implements UpdatesListener {
         commands.add(new StartCommand(userRepository, commands));
         commands.add(new TrackCommand(userRepository));
         commands.add(new UntrackCommand(userRepository));
+
+        messageProcessor = new MessageProcessor(commands);
     }
 
     public void start() {
@@ -43,31 +46,10 @@ public class Bot implements UpdatesListener {
     @Override
     public int process(List<Update> updates) {
         for (var update : updates) {
-            if (update.message().text().startsWith("/")) {
-                processCommand(update);
-            } else {
-                processMessage(update);
-            }
+            bot.execute(messageProcessor.process(update));
         }
 
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
-    }
-
-    private void processCommand(Update update) {
-        boolean isSupported = false;
-        for (var command : commands) {
-            if (command.supports(update)) {
-                isSupported = true;
-                bot.execute(command.handle(update));
-            }
-        }
-        if (!isSupported) {
-            bot.execute(new SendMessage(update.message().chat().id(), "Command not supported."));
-        }
-    }
-
-    private void processMessage(Update update) {
-        bot.execute(new SendMessage(update.message().chat().id(), "Process message..."));
     }
 
     private void setUpMenuCommands() {
