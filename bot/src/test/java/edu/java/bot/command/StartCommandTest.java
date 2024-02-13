@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,5 +96,16 @@ class StartCommandTest {
             """)
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
+    }
+
+    @Test
+    void handle_AddsNewUser() {
+        when(userRepository.findUserById(2L)).thenReturn(Optional.empty());
+        Command startCommand = new StartCommand(userRepository, List.of());
+
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
+        startCommand.handle(updateMock);
+
+        verify(userRepository).saveUser(any(User.class));
     }
 }

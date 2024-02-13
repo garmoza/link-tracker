@@ -68,4 +68,15 @@ public class MockUpdateUtils {
 
         return update;
     }
+
+    public static Update getUpdateMock(String messageText) {
+        Update update = mock(Update.class);
+        Message message = mock(Message.class);
+
+        // stubbing
+        when(update.message()).thenReturn(message);
+        when(update.message().text()).thenReturn(messageText);
+
+        return update;
+    }
 }
