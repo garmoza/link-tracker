@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
-import edu.java.bot.mock.UpdateMockUtils;
+import edu.java.bot.mock.MockUpdateUtils;
 import edu.java.bot.repository.UserRepository;
 import java.util.Optional;
 import java.util.Set;
@@ -40,11 +40,11 @@ class ListCommandTest {
     }
 
     @Test
-    void handleUserIsNotRegistered() {
+    void handle_UserIsNotRegistered() {
         when(userRepository.findUserById(2L)).thenReturn(Optional.empty());
         Command listCommand = new ListCommand(userRepository);
 
-        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L);
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, "User is not registered.");
@@ -52,11 +52,11 @@ class ListCommandTest {
     }
 
     @Test
-    void handleUserHasNoLinks() {
+    void handle_UserHasNoLinks() {
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
         Command listCommand = new ListCommand(userRepository);
 
-        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L);
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, "There are no tracked links.");
@@ -64,7 +64,7 @@ class ListCommandTest {
     }
 
     @Test
-    void handleUserHasTrackingLinks() {
+    void handle_UserHasTrackingLinks() {
         User user = new User(2L);
         Set<String> links = user.getLinks();
         links.add("link1");
@@ -72,7 +72,7 @@ class ListCommandTest {
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(user));
         Command listCommand = new ListCommand(userRepository);
 
-        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L);
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """

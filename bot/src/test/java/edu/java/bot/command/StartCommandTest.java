@@ -4,8 +4,8 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
-import edu.java.bot.mock.CommandMockUtils;
-import edu.java.bot.mock.UpdateMockUtils;
+import edu.java.bot.mock.MockCommandUtils;
+import edu.java.bot.mock.MockUpdateUtils;
 import edu.java.bot.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +42,13 @@ class StartCommandTest {
     }
 
     @Test
-    void handleWithCommands() {
-        Command command1 = CommandMockUtils.getCommandMock("/command", "description of command");
-        Command command2 = CommandMockUtils.getCommandMock("/another", "another description");
+    void handle_WithCommands() {
+        Command command1 = MockCommandUtils.getCommandMock("/command", "description of command");
+        Command command2 = MockCommandUtils.getCommandMock("/another", "another description");
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
         Command startCommand = new StartCommand(userRepository, List.of(command1, command2));
 
-        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L, "Bob");
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """
@@ -62,11 +62,11 @@ class StartCommandTest {
     }
 
     @Test
-    void handleWithoutCommands() {
+    void handle_WithoutCommands() {
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
         Command startCommand = new StartCommand(userRepository, List.of());
 
-        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L, "Bob");
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """
@@ -78,13 +78,13 @@ class StartCommandTest {
     }
 
     @Test
-    void handleWithSelfRef() {
+    void handle_WithSelfRef() {
         List<Command> commands = new ArrayList<>();
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
         Command startCommand = new StartCommand(userRepository, commands);
         commands.add(startCommand);
 
-        Update updateMock = UpdateMockUtils.getUpdateMock(1L, 2L, "Bob");
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """

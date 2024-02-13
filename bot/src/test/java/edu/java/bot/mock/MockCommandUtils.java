@@ -4,7 +4,7 @@ import edu.java.bot.command.Command;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CommandMockUtils {
+public class MockCommandUtils {
 
     public static Command getCommandMock(String commandName, String description) {
         Command command = mock(Command.class);

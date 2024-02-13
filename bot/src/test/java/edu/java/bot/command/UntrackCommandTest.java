@@ -1,11 +1,23 @@
 package edu.java.bot.command;
 
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.entity.User;
+import edu.java.bot.mock.MockUpdateUtils;
 import edu.java.bot.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UntrackCommandTest {
@@ -32,7 +44,65 @@ class UntrackCommandTest {
     }
 
     @Test
-    void authorizedHandle() {
-        // TODO
+    void authorizedHandle_SuccessUntrackLink() {
+        UntrackCommand untrackCommand = new UntrackCommand(userRepository);
+
+        Update updateMock = MockUpdateUtils.getUpdateMock("/untrack link", 1L);
+        User user = new User(2L);
+        user.getLinks().add("link");
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, user);
+
+        SendMessage expectedMessage = new SendMessage(1L, "Link *link* no longer tracked.")
+            .parseMode(ParseMode.Markdown);
+        assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
+        assertThat(user.getLinks())
+            .hasSize(0);
+    }
+
+    @Test
+    void authorizedHandle_LinkAlreadyNotTracked() {
+        UntrackCommand untrackCommand = new UntrackCommand(userRepository);
+
+        Update updateMock = MockUpdateUtils.getUpdateMock("/untrack link", 1L);
+        User user = new User(2L);
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, user);
+
+        SendMessage expectedMessage = new SendMessage(1L, "Tracking link not found.");
+        assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
+    }
+
+    @Test
+    void authorizedHandle_WrongFormat_NoParameters() {
+        UntrackCommand untrackCommand = new UntrackCommand(userRepository);
+
+        Update updateMock = MockUpdateUtils.getUpdateMock("/untrack", 1L);
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
+
+        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */untrack link* format.")
+            .parseMode(ParseMode.Markdown);
+        assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
+    }
+
+    @Test
+    void authorizedHandle_WrongFormat_ManyParameters() {
+        UntrackCommand untrackCommand = new UntrackCommand(userRepository);
+
+        Update updateMock = MockUpdateUtils.getUpdateMock("/untrack link1 link2", 1L);
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
+
+        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */untrack link* format.")
+            .parseMode(ParseMode.Markdown);
+        assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
+    }
+
+    @Test
+    void handle_NotCallAuthorizedHandle_WhenUserNotFound() {
+        UntrackCommand untrackCommand = spy(new UntrackCommand(userRepository));
+        when(userRepository.findUserById(2L)).thenReturn(Optional.empty());
+
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
+        untrackCommand.handle(updateMock);
+
+        verify(untrackCommand, never()).authorizedHandle(any(Update.class), any(User.class));
     }
 }
