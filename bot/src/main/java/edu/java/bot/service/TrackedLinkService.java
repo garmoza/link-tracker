@@ -7,6 +7,4 @@ public interface TrackedLinkService {
     boolean trackLink(User user, String url);
 
     boolean untrackLink(User user, String url);
-
-    boolean isTrackedNow(User user, String url);
 }

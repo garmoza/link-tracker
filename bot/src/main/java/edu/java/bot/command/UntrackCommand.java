@@ -5,14 +5,16 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
-import java.util.Set;
+import edu.java.bot.service.TrackedLinkService;
 
 public class UntrackCommand extends AuthorizedCommand {
 
     private final UserRepository userRepository;
+    private final TrackedLinkService trackedLinkService;
 
-    public UntrackCommand(UserRepository userRepository) {
+    public UntrackCommand(UserRepository userRepository, TrackedLinkService trackedLinkService) {
         this.userRepository = userRepository;
+        this.trackedLinkService = trackedLinkService;
     }
 
     @Override
@@ -35,13 +37,12 @@ public class UntrackCommand extends AuthorizedCommand {
                 .parseMode(ParseMode.Markdown);
         }
 
-        Set<String> links = user.getLinks();
+        boolean linkRemoved = trackedLinkService.untrackLink(user, params[1]);
 
-        if (!links.contains(params[1])) {
+        if (!linkRemoved) {
             return new SendMessage(chatId, "Tracking link not found.");
         }
 
-        links.remove(params[1]);
         return new SendMessage(chatId, "Link *" + params[1] + "* no longer tracked.")
             .parseMode(ParseMode.Markdown);
     }

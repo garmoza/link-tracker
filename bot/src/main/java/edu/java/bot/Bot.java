@@ -37,7 +37,7 @@ public class Bot implements UpdatesListener {
         commands.add(new ListCommand(userRepository));
         commands.add(new StartCommand(userRepository, commands));
         commands.add(new TrackCommand(userRepository, trackedLinkService));
-        commands.add(new UntrackCommand(userRepository));
+        commands.add(new UntrackCommand(userRepository, trackedLinkService));
 
         updateService = new UpdateService(commands);
     }

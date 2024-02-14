@@ -13,9 +13,4 @@ public class TrackedLinkServiceImpl implements TrackedLinkService {
     public boolean untrackLink(User user, String url) {
         return user.getLinks().remove(url);
     }
-
-    @Override
-    public boolean isTrackedNow(User user, String url) {
-        return false;
-    }
 }
