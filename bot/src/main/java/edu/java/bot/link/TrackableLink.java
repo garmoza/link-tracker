@@ -1,14 +1,14 @@
 package edu.java.bot.link;
 
-import java.net.URL;
+import edu.java.bot.entity.Link;
 
-public interface TrackedLink {
+public interface TrackableLink {
 
     String resourceName();
 
     String host();
 
-    default boolean supports(URL link) {
+    default boolean supports(Link link) {
         return link.getHost().equals(host());
     }
 }

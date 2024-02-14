@@ -1,14 +1,14 @@
 package edu.java.bot.link;
 
-public class StackOverflowTrackedLink implements TrackedLink {
+public class GitHubTrackableLink implements TrackableLink {
 
     @Override
     public String resourceName() {
-        return "Stack Overflow";
+        return "GitHub";
     }
 
     @Override
     public String host() {
-        return "stackoverflow.com";
+        return "github.com";
     }
 }

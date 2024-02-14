@@ -47,6 +47,7 @@ class TrackCommandTest {
 
     @Test
     void authorizedHandle_SuccessAddingLink() {
+        when(trackedLinkService.isTrackableLink(any())).thenReturn(true);
         when(trackedLinkService.trackLink(any(), any())).thenReturn(true);
         TrackCommand trackCommand = new TrackCommand(userRepository, trackedLinkService);
 
@@ -61,6 +62,7 @@ class TrackCommandTest {
 
     @Test
     void authorizedHandle_LinkAlreadyTracking() {
+        when(trackedLinkService.isTrackableLink(any())).thenReturn(true);
         when(trackedLinkService.trackLink(any(), any())).thenReturn(false);
         TrackCommand trackCommand = new TrackCommand(userRepository, trackedLinkService);
 
@@ -78,7 +80,7 @@ class TrackCommandTest {
         Update updateMock = MockUpdateUtils.getUpdateMock("/track", 1L);
         SendMessage actualMessage = trackCommand.authorizedHandle(updateMock, new User(2L));
 
-        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */track link* format.")
+        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */track URL* format.")
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
@@ -90,7 +92,7 @@ class TrackCommandTest {
         Update updateMock = MockUpdateUtils.getUpdateMock("/track link1 link2", 1L);
         SendMessage actualMessage = trackCommand.authorizedHandle(updateMock, new User(2L));
 
-        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */track link* format.")
+        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */track URL* format.")
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }

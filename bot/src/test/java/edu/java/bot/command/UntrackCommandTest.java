@@ -47,6 +47,7 @@ class UntrackCommandTest {
 
     @Test
     void authorizedHandle_SuccessUntrackLink() {
+        when(trackedLinkService.isTrackableLink(any())).thenReturn(true);
         when(trackedLinkService.untrackLink(any(), any())).thenReturn(true);
         UntrackCommand untrackCommand = new UntrackCommand(userRepository, trackedLinkService);
 
@@ -60,6 +61,7 @@ class UntrackCommandTest {
 
     @Test
     void authorizedHandle_LinkAlreadyNotTracked() {
+        when(trackedLinkService.isTrackableLink(any())).thenReturn(true);
         when(trackedLinkService.untrackLink(any(), any())).thenReturn(false);
         UntrackCommand untrackCommand = new UntrackCommand(userRepository, trackedLinkService);
 
@@ -78,7 +80,7 @@ class UntrackCommandTest {
         Update updateMock = MockUpdateUtils.getUpdateMock("/untrack", 1L);
         SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
 
-        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */untrack link* format.")
+        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */untrack URL* format.")
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
@@ -90,7 +92,7 @@ class UntrackCommandTest {
         Update updateMock = MockUpdateUtils.getUpdateMock("/untrack link1 link2", 1L);
         SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
 
-        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */untrack link* format.")
+        SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */untrack URL* format.")
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }

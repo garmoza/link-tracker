@@ -5,6 +5,8 @@ import edu.java.bot.entity.User;
 
 public interface TrackedLinkService {
 
+    boolean isTrackableLink(Link link);
+
     boolean trackLink(User user, Link link);
 
     boolean untrackLink(User user, Link link);

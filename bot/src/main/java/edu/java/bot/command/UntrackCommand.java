@@ -36,7 +36,7 @@ public class UntrackCommand extends AuthorizedCommand {
         String[] params = update.message().text().split(" ");
 
         if (params.length != 2) {
-            return new SendMessage(chatId, "Pls, enter the command in *" + command() + " link* format.")
+            return new SendMessage(chatId, "Pls, enter the command in *" + command() + " URL* format.")
                 .parseMode(ParseMode.Markdown);
         }
 
@@ -47,9 +47,13 @@ public class UntrackCommand extends AuthorizedCommand {
             return new SendMessage(chatId, e.getMessage());
         }
 
-        boolean linkRemoved = trackedLinkService.untrackLink(user, link);
+        boolean isTrackable = trackedLinkService.isTrackableLink(link);
+        if (!isTrackable) {
+            return new SendMessage(chatId, "Resource not supported.");
+        }
 
-        if (!linkRemoved) {
+        boolean removed = trackedLinkService.untrackLink(user, link);
+        if (!removed) {
             return new SendMessage(chatId, "Tracking link not found.");
         }
 

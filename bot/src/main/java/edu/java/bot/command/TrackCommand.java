@@ -36,7 +36,7 @@ public class TrackCommand extends AuthorizedCommand {
         String[] params = update.message().text().split(" ");
 
         if (params.length != 2) {
-            return new SendMessage(chatId, "Pls, enter the command in *" + command() + " link* format.")
+            return new SendMessage(chatId, "Pls, enter the command in *" + command() + " URL* format.")
                 .parseMode(ParseMode.Markdown);
         }
 
@@ -47,9 +47,13 @@ public class TrackCommand extends AuthorizedCommand {
             return new SendMessage(chatId, e.getMessage());
         }
 
-        boolean linkAdded = trackedLinkService.trackLink(user, link);
+        boolean isTrackable = trackedLinkService.isTrackableLink(link);
+        if (!isTrackable) {
+            return new SendMessage(chatId, "Resource not supported.");
+        }
 
-        if (!linkAdded) {
+        boolean added = trackedLinkService.trackLink(user, link);
+        if (!added) {
             return new SendMessage(chatId, "Link already tracking.");
         }
 
