@@ -50,12 +50,10 @@ class UntrackCommandTest {
         when(trackedLinkService.untrackLink(any(), any())).thenReturn(true);
         UntrackCommand untrackCommand = new UntrackCommand(userRepository, trackedLinkService);
 
-        Update updateMock = MockUpdateUtils.getUpdateMock("/untrack link", 1L);
-        User user = new User(2L);
-        user.getLinks().add("link");
-        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, user);
+        Update updateMock = MockUpdateUtils.getUpdateMock("/untrack https://example.com/", 1L);
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
 
-        SendMessage expectedMessage = new SendMessage(1L, "Link *link* no longer tracked.")
+        SendMessage expectedMessage = new SendMessage(1L, "Link *https://example.com/* no longer tracked.")
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
@@ -65,7 +63,7 @@ class UntrackCommandTest {
         when(trackedLinkService.untrackLink(any(), any())).thenReturn(false);
         UntrackCommand untrackCommand = new UntrackCommand(userRepository, trackedLinkService);
 
-        Update updateMock = MockUpdateUtils.getUpdateMock("/untrack link", 1L);
+        Update updateMock = MockUpdateUtils.getUpdateMock("/untrack https://example.com/", 1L);
         User user = new User(2L);
         SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, user);
 

@@ -3,6 +3,7 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.entity.Link;
 import edu.java.bot.entity.User;
 import edu.java.bot.mock.MockUpdateUtils;
 import edu.java.bot.repository.UserRepository;
@@ -66,9 +67,9 @@ class ListCommandTest {
     @Test
     void handle_UserHasTrackingLinks() {
         User user = new User(2L);
-        Set<String> links = user.getLinks();
-        links.add("link1");
-        links.add("link2");
+        Set<Link> links = user.getLinks();
+        links.add(new Link("url1", "host"));
+        links.add(new Link("url2", "host"));
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(user));
         Command listCommand = new ListCommand(userRepository);
 
@@ -77,8 +78,8 @@ class ListCommandTest {
 
         SendMessage expectedMessage = new SendMessage(1L, """
             Tracked links:
-            - link1
-            - link2
+            - url1
+            - url2
             """)
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());

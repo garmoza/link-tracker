@@ -3,9 +3,12 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.entity.Link;
 import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
 import edu.java.bot.service.TrackedLinkService;
+import edu.java.bot.util.LinkParser;
+import edu.java.bot.util.URLParseException;
 
 public class TrackCommand extends AuthorizedCommand {
 
@@ -37,7 +40,14 @@ public class TrackCommand extends AuthorizedCommand {
                 .parseMode(ParseMode.Markdown);
         }
 
-        boolean linkAdded = trackedLinkService.trackLink(user, params[1]);
+        Link link;
+        try {
+            link = LinkParser.parse(params[1]);
+        } catch (URLParseException e) {
+            return new SendMessage(chatId, e.getMessage());
+        }
+
+        boolean linkAdded = trackedLinkService.trackLink(user, link);
 
         if (!linkAdded) {
             return new SendMessage(chatId, "Link already tracking.");

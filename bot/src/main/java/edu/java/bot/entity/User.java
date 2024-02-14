@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class User {
 
-    private long id;
-    private HashSet<String> links;
+    private final long id;
+    private final HashSet<Link> links;
 
     public User(long id) {
         this.id = id;

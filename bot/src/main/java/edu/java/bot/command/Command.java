@@ -11,7 +11,8 @@ public interface Command {
     String description();
 
     default boolean supports(Update update) {
-        return update.message().text().startsWith(command());
+        String[] params = update.message().text().split(" ");
+        return params.length != 0 && params[0].equals(command());
     }
 
     SendMessage handle(Update update);
