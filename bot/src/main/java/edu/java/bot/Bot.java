@@ -12,9 +12,11 @@ import edu.java.bot.command.StartCommand;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UntrackCommand;
 import edu.java.bot.configuration.ApplicationConfig;
-import edu.java.bot.processor.UserMessageProcessor;
 import edu.java.bot.repository.UserRepository;
 import edu.java.bot.repository.UserRepositoryImpl;
+import edu.java.bot.service.TrackedLinkService;
+import edu.java.bot.service.TrackedLinkServiceImpl;
+import edu.java.bot.service.UpdateService;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,21 +24,22 @@ public class Bot implements UpdatesListener {
 
     private final TelegramBot bot;
     private final List<Command> commands;
-    private final UserMessageProcessor messageProcessor;
+    private final UpdateService updateService;
 
     public Bot() {
         ApplicationConfig appConfig = new ApplicationConfig(System.getenv("TELEGRAM_API_KEY"));
         bot = new TelegramBot(appConfig.telegramToken());
         UserRepository userRepository = new UserRepositoryImpl();
+        TrackedLinkService trackedLinkService = new TrackedLinkServiceImpl();
 
         commands = new ArrayList<>();
         commands.add(new HelpCommand(commands));
         commands.add(new ListCommand(userRepository));
         commands.add(new StartCommand(userRepository, commands));
-        commands.add(new TrackCommand(userRepository));
+        commands.add(new TrackCommand(userRepository, trackedLinkService));
         commands.add(new UntrackCommand(userRepository));
 
-        messageProcessor = new UserMessageProcessor(commands);
+        updateService = new UpdateService(commands);
     }
 
     public void start() {
@@ -47,7 +50,7 @@ public class Bot implements UpdatesListener {
     @Override
     public int process(List<Update> updates) {
         for (var update : updates) {
-            bot.execute(messageProcessor.process(update));
+            bot.execute(updateService.process(update));
         }
 
         return UpdatesListener.CONFIRMED_UPDATES_ALL;

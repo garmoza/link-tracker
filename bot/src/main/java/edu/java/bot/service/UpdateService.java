@@ -1,15 +1,15 @@
-package edu.java.bot.processor;
+package edu.java.bot.service;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.Command;
 import java.util.List;
 
-public class UserMessageProcessor {
+public class UpdateService {
 
     private final List<Command> commands;
 
-    public UserMessageProcessor(List<Command> commands) {
+    public UpdateService(List<Command> commands) {
         this.commands = commands;
     }
 

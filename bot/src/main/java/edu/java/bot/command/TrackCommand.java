@@ -5,14 +5,16 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
-import java.util.Set;
+import edu.java.bot.service.TrackedLinkService;
 
 public class TrackCommand extends AuthorizedCommand {
 
     private final UserRepository userRepository;
+    private final TrackedLinkService trackedLinkService;
 
-    public TrackCommand(UserRepository userRepository) {
+    public TrackCommand(UserRepository userRepository, TrackedLinkService trackedLinkService) {
         this.userRepository = userRepository;
+        this.trackedLinkService = trackedLinkService;
     }
 
     @Override
@@ -35,13 +37,12 @@ public class TrackCommand extends AuthorizedCommand {
                 .parseMode(ParseMode.Markdown);
         }
 
-        Set<String> links = user.getLinks();
+        boolean linkAdded = trackedLinkService.trackLink(user, params[1]);
 
-        if (links.contains(params[1])) {
+        if (!linkAdded) {
             return new SendMessage(chatId, "Link already tracking.");
         }
 
-        links.add(params[1]);
         return new SendMessage(chatId, "Link *" + params[1] + "* successfully added.")
             .parseMode(ParseMode.Markdown);
     }
