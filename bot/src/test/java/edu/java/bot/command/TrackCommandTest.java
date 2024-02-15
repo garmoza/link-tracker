@@ -99,6 +99,31 @@ class TrackCommandTest {
     }
 
     @Test
+    void authorizedHandle_NotValidURL() {
+        TrackCommand trackCommand = new TrackCommand(userService, trackedLinkService);
+
+        Update updateMock = MockUpdateUtils.getUpdateMock("/track not-valid-URL", 1L);
+        SendMessage actualMessage = trackCommand.authorizedHandle(updateMock, new User(2L));
+
+        SendMessage expectedMessage = new SendMessage(1L, "Impossible to parse URL.")
+            .parseMode(ParseMode.Markdown);
+        assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
+    }
+
+    @Test
+    void authorizedHandle_ResourceNotSupported() {
+        when(trackedLinkService.isTrackableLink(any())).thenReturn(false);
+        TrackCommand trackCommand = new TrackCommand(userService, trackedLinkService);
+
+        Update updateMock = MockUpdateUtils.getUpdateMock("/track https://example.com/", 1L);
+        SendMessage actualMessage = trackCommand.authorizedHandle(updateMock, new User(2L));
+
+        SendMessage expectedMessage = new SendMessage(1L, "Resource not supported.")
+            .parseMode(ParseMode.Markdown);
+        assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
+    }
+
+    @Test
     void handle_NotCallAuthorizedHandle_WhenUserNotFound() {
         TrackCommand trackCommand = spy(new TrackCommand(userService, trackedLinkService));
         when(userService.findUserById(2L)).thenReturn(Optional.empty());
