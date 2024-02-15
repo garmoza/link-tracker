@@ -9,6 +9,7 @@ import edu.java.bot.repository.UserRepository;
 import edu.java.bot.service.TrackedLinkService;
 import edu.java.bot.util.LinkParser;
 import edu.java.bot.util.URLParseException;
+import java.util.Optional;
 
 public class UntrackCommand extends AuthorizedCommand {
 
@@ -35,29 +36,34 @@ public class UntrackCommand extends AuthorizedCommand {
         long chatId = update.message().chat().id();
         String[] params = update.message().text().split(" ");
 
+        Optional<String> resultMessage = Optional.empty();
+
         if (params.length != 2) {
-            return new SendMessage(chatId, "Pls, enter the command in *" + command() + " URL* format.")
-                .parseMode(ParseMode.Markdown);
+            resultMessage = Optional.of("Pls, enter the command in *" + command() + " URL* format.");
         }
 
-        Link link;
-        try {
-            link = LinkParser.parse(params[1]);
-        } catch (URLParseException e) {
-            return new SendMessage(chatId, e.getMessage());
+        Link link = null;
+        if (resultMessage.isEmpty()) {
+            try {
+                link = LinkParser.parse(params[1]);
+            } catch (URLParseException e) {
+                resultMessage = Optional.of(e.getMessage());
+            }
         }
 
-        boolean isTrackable = trackedLinkService.isTrackableLink(link);
-        if (!isTrackable) {
-            return new SendMessage(chatId, "Resource not supported.");
+        if (resultMessage.isEmpty() && !trackedLinkService.isTrackableLink(link)) {
+            resultMessage = Optional.of("Resource not supported.");
         }
 
-        boolean removed = trackedLinkService.untrackLink(user, link);
-        if (!removed) {
-            return new SendMessage(chatId, "Tracking link not found.");
+        if (resultMessage.isEmpty() && !trackedLinkService.untrackLink(user, link)) {
+            resultMessage = Optional.of("Tracking link not found.");
         }
 
-        return new SendMessage(chatId, "Link *" + params[1] + "* no longer tracked.")
+        if (resultMessage.isEmpty()) {
+            resultMessage = Optional.of("Link *" + params[1] + "* no longer tracked.");
+        }
+
+        return new SendMessage(chatId, resultMessage.get())
             .parseMode(ParseMode.Markdown);
     }
 

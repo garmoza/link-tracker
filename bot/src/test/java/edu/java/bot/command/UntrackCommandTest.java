@@ -69,7 +69,8 @@ class UntrackCommandTest {
         User user = new User(2L);
         SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, user);
 
-        SendMessage expectedMessage = new SendMessage(1L, "Tracking link not found.");
+        SendMessage expectedMessage = new SendMessage(1L, "Tracking link not found.")
+            .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
 

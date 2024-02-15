@@ -69,7 +69,8 @@ class TrackCommandTest {
         Update updateMock = MockUpdateUtils.getUpdateMock("/track https://example.com/", 1L);
         SendMessage actualMessage = trackCommand.authorizedHandle(updateMock, new User(2L));
 
-        SendMessage expectedMessage = new SendMessage(1L, "Link already tracking.");
+        SendMessage expectedMessage = new SendMessage(1L, "Link already tracked.")
+            .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
 
