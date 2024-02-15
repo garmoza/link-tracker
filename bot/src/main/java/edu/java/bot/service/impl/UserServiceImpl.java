@@ -1,7 +1,8 @@
-package edu.java.bot.service;
+package edu.java.bot.service.impl;
 
 import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
+import edu.java.bot.service.UserService;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {

@@ -1,7 +1,8 @@
-package edu.java.bot.service;
+package edu.java.bot.service.impl;
 
 import edu.java.bot.entity.Link;
 import edu.java.bot.entity.User;
+import edu.java.bot.service.TrackedLinkService;
 import edu.java.bot.source.TrackableLink;
 import java.util.List;
 
