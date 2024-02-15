@@ -2,11 +2,10 @@ package edu.java.bot.processor;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.command.Command;
+import edu.java.bot.command.CommandHandler;
 import edu.java.bot.mock.MockUpdateUtils;
 import java.util.List;
 
-import edu.java.bot.processor.UpdateProcessor;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,27 +28,27 @@ class UpdateProcessorTest {
 
     @Test
     void process_ProcessCommand_CommandSupported() {
-        Command command = Mockito.mock(Command.class);
-        when(command.supports(any(Update.class))).thenReturn(true);
-        when(command.handle(any(Update.class))).thenReturn(new SendMessage(1L, "Text"));
-        UpdateProcessor updateProcessor = new UpdateProcessor(List.of(command));
+        CommandHandler commandHandler = Mockito.mock(CommandHandler.class);
+        when(commandHandler.supports(any(Update.class))).thenReturn(true);
+        when(commandHandler.handle(any(Update.class))).thenReturn(new SendMessage(1L, "Text"));
+        UpdateProcessor updateProcessor = new UpdateProcessor(List.of(commandHandler));
 
-        Update updateMock = MockUpdateUtils.getUpdateMock("/command param1 param2", 1L);
+        Update updateMock = MockUpdateUtils.getUpdateMock("/commandHandler param1 param2", 1L);
         updateProcessor.process(updateMock);
 
-        verify(command).handle(any(Update.class));
+        verify(commandHandler).handle(any(Update.class));
     }
 
     @Test
     void process_ProcessCommand_CommandNotSupported() {
-        Command command = Mockito.mock(Command.class);
-        when(command.supports(any(Update.class))).thenReturn(false);
-        UpdateProcessor updateProcessor = new UpdateProcessor(List.of(command));
+        CommandHandler commandHandler = Mockito.mock(CommandHandler.class);
+        when(commandHandler.supports(any(Update.class))).thenReturn(false);
+        UpdateProcessor updateProcessor = new UpdateProcessor(List.of(commandHandler));
 
-        Update updateMock = MockUpdateUtils.getUpdateMock("/command param1 param2", 1L);
+        Update updateMock = MockUpdateUtils.getUpdateMock("/commandHandler param1 param2", 1L);
         SendMessage actualMessage = updateProcessor.process(updateMock);
 
-        SendMessage expectedMessage = new SendMessage(1L, "Command not supported.");
+        SendMessage expectedMessage = new SendMessage(1L, "CommandHandler not supported.");
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
 }

@@ -24,7 +24,7 @@ class ListCommandTest {
 
     @Test
     void command() {
-        Command listCommand = new ListCommand(userRepository);
+        CommandHandler listCommand = new ListCommand(userRepository);
 
         String actualCommand = listCommand.command();
 
@@ -33,7 +33,7 @@ class ListCommandTest {
 
     @Test
     void description() {
-        Command listCommand = new ListCommand(userRepository);
+        CommandHandler listCommand = new ListCommand(userRepository);
 
         String actualDescription = listCommand.description();
 
@@ -43,7 +43,7 @@ class ListCommandTest {
     @Test
     void handle_UserIsNotRegistered() {
         when(userRepository.findUserById(2L)).thenReturn(Optional.empty());
-        Command listCommand = new ListCommand(userRepository);
+        CommandHandler listCommand = new ListCommand(userRepository);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
@@ -55,7 +55,7 @@ class ListCommandTest {
     @Test
     void handle_UserHasNoLinks() {
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        Command listCommand = new ListCommand(userRepository);
+        CommandHandler listCommand = new ListCommand(userRepository);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
@@ -71,7 +71,7 @@ class ListCommandTest {
         links.add(new Link("url1", "host"));
         links.add(new Link("url2", "host"));
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(user));
-        Command listCommand = new ListCommand(userRepository);
+        CommandHandler listCommand = new ListCommand(userRepository);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);

@@ -29,7 +29,7 @@ class TrackCommandTest {
 
     @Test
     void command() {
-        Command trackCommand = new TrackCommand(userRepository, trackedLinkService);
+        CommandHandler trackCommand = new TrackCommand(userRepository, trackedLinkService);
 
         String actualCommand = trackCommand.command();
 
@@ -38,7 +38,7 @@ class TrackCommandTest {
 
     @Test
     void description() {
-        Command trackCommand = new TrackCommand(userRepository, trackedLinkService);
+        CommandHandler trackCommand = new TrackCommand(userRepository, trackedLinkService);
 
         String actualDescription = trackCommand.description();
 

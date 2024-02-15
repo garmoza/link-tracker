@@ -3,6 +3,8 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.command.CommandHandler;
+import edu.java.bot.command.StartCommand;
 import edu.java.bot.entity.User;
 import edu.java.bot.mock.MockCommandUtils;
 import edu.java.bot.mock.MockUpdateUtils;
@@ -27,7 +29,7 @@ class StartCommandTest {
 
     @Test
     void command() {
-        Command startCommand = new StartCommand(userRepository, List.of());
+        CommandHandler startCommand = new StartCommand(userRepository, List.of());
 
         String actualCommand = startCommand.command();
 
@@ -36,7 +38,7 @@ class StartCommandTest {
 
     @Test
     void description() {
-        Command startCommand = new StartCommand(userRepository, List.of());
+        CommandHandler startCommand = new StartCommand(userRepository, List.of());
 
         String actualDescription = startCommand.description();
 
@@ -45,10 +47,10 @@ class StartCommandTest {
 
     @Test
     void handle_WithCommands() {
-        Command command1 = MockCommandUtils.getCommandMock("/command", "description of command");
-        Command command2 = MockCommandUtils.getCommandMock("/another", "another description");
+        CommandHandler commandHandler1 = MockCommandUtils.getCommandMock("/command", "description of command");
+        CommandHandler commandHandler2 = MockCommandUtils.getCommandMock("/another", "another description");
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        Command startCommand = new StartCommand(userRepository, List.of(command1, command2));
+        CommandHandler startCommand = new StartCommand(userRepository, List.of(commandHandler1, commandHandler2));
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
@@ -66,7 +68,7 @@ class StartCommandTest {
     @Test
     void handle_WithoutCommands() {
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        Command startCommand = new StartCommand(userRepository, List.of());
+        CommandHandler startCommand = new StartCommand(userRepository, List.of());
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
@@ -81,10 +83,10 @@ class StartCommandTest {
 
     @Test
     void handle_WithSelfRef() {
-        List<Command> commands = new ArrayList<>();
+        List<CommandHandler> commandHandlers = new ArrayList<>();
         when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        Command startCommand = new StartCommand(userRepository, commands);
-        commands.add(startCommand);
+        CommandHandler startCommand = new StartCommand(userRepository, commandHandlers);
+        commandHandlers.add(startCommand);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
@@ -101,7 +103,7 @@ class StartCommandTest {
     @Test
     void handle_AddsNewUser() {
         when(userRepository.findUserById(2L)).thenReturn(Optional.empty());
-        Command startCommand = new StartCommand(userRepository, List.of());
+        CommandHandler startCommand = new StartCommand(userRepository, List.of());
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         startCommand.handle(updateMock);

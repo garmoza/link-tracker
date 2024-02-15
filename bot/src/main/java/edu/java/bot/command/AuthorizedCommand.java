@@ -6,7 +6,7 @@ import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
 import java.util.Optional;
 
-public abstract class AuthorizedCommand implements Command {
+public abstract class AuthorizedCommand implements CommandHandler {
 
     @Override
     public SendMessage handle(Update update) {

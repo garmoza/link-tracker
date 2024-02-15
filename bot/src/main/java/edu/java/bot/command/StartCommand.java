@@ -7,14 +7,14 @@ import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
 import java.util.List;
 
-public class StartCommand implements Command {
+public class StartCommand implements CommandHandler {
 
     private final UserRepository userRepository;
-    private final List<Command> commands;
+    private final List<CommandHandler> commandHandlers;
 
-    public StartCommand(UserRepository userRepository, List<Command> commands) {
+    public StartCommand(UserRepository userRepository, List<CommandHandler> commandHandlers) {
         this.userRepository = userRepository;
-        this.commands = commands;
+        this.commandHandlers = commandHandlers;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class StartCommand implements Command {
             Hello, *%s*!
             You are successfully registered. Pls, use commands:
             """.formatted(name));
-        for (var command : commands) {
+        for (var command : commandHandlers) {
             message.append("- %s - %s.\n".formatted(command.command(), command.description()));
         }
         return new SendMessage(update.message().chat().id(), message.toString())

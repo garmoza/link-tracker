@@ -12,37 +12,37 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CommandTest {
+class CommandHandlerTest {
 
     @Spy
-    private Command command;
+    private CommandHandler commandHandler;
 
     @Test
     void supports_ReturnsTrue() {
-        when(command.command()).thenReturn("/command");
+        when(commandHandler.command()).thenReturn("/command");
         Update updateMock = MockUpdateUtils.getUpdateMock("/command param1 param2");
 
-        boolean isSupports = command.supports(updateMock);
+        boolean isSupports = commandHandler.supports(updateMock);
 
         assertThat(isSupports).as("checks that message start with command").isTrue();
     }
 
     @Test
     void supports_ReturnsFalse() {
-        when(command.command()).thenReturn("/command");
+        when(commandHandler.command()).thenReturn("/command");
         Update updateMock = MockUpdateUtils.getUpdateMock("/another param1 param2");
 
-        boolean isSupports = command.supports(updateMock);
+        boolean isSupports = commandHandler.supports(updateMock);
 
         assertThat(isSupports).as("checks that message does not start with command").isFalse();
     }
 
     @Test
     void toApiCommand() {
-        when(command.command()).thenReturn("/command");
-        when(command.description()).thenReturn("fancy description");
+        when(commandHandler.command()).thenReturn("/command");
+        when(commandHandler.description()).thenReturn("fancy description");
 
-        BotCommand actualBotCommand = command.toApiCommand();
+        BotCommand actualBotCommand = commandHandler.toApiCommand();
 
         BotCommand expectedBotCommand = new BotCommand("/command", "fancy description");
         assertEquals(expectedBotCommand, actualBotCommand);

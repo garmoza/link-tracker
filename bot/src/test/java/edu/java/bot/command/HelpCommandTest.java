@@ -3,6 +3,8 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.command.CommandHandler;
+import edu.java.bot.command.HelpCommand;
 import edu.java.bot.mock.MockCommandUtils;
 import edu.java.bot.mock.MockUpdateUtils;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ class HelpCommandTest {
 
     @Test
     void command() {
-        Command helpCommand = new HelpCommand(new ArrayList<>());
+        CommandHandler helpCommand = new HelpCommand(new ArrayList<>());
 
         String actualCommand = helpCommand.command();
 
@@ -23,7 +25,7 @@ class HelpCommandTest {
 
     @Test
     void description() {
-        Command helpCommand = new HelpCommand(new ArrayList<>());
+        CommandHandler helpCommand = new HelpCommand(new ArrayList<>());
 
         String actualDescription = helpCommand.description();
 
@@ -32,9 +34,9 @@ class HelpCommandTest {
 
     @Test
     void handle_WithCommands() {
-        Command command1 = MockCommandUtils.getCommandMock("/command", "description of command");
-        Command command2 = MockCommandUtils.getCommandMock("/another", "another description");
-        Command helpCommand = new HelpCommand(List.of(command1, command2));
+        CommandHandler command1 = MockCommandUtils.getCommandMock("/command", "description of command");
+        CommandHandler command2 = MockCommandUtils.getCommandMock("/another", "another description");
+        CommandHandler helpCommand = new HelpCommand(List.of(command1, command2));
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         SendMessage actualMessage = helpCommand.handle(updateMock);
@@ -49,7 +51,7 @@ class HelpCommandTest {
 
     @Test
     void handle_WithoutCommands() {
-        Command helpCommand = new HelpCommand(List.of());
+        CommandHandler helpCommand = new HelpCommand(List.of());
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         SendMessage actualMessage = helpCommand.handle(updateMock);
@@ -61,9 +63,9 @@ class HelpCommandTest {
 
     @Test
     void handle_WithSelfRef() {
-        List<Command> commands = new ArrayList<>();
-        Command helpCommand = new HelpCommand(commands);
-        commands.add(helpCommand);
+        List<CommandHandler> commandHandlers = new ArrayList<>();
+        CommandHandler helpCommand = new HelpCommand(commandHandlers);
+        commandHandlers.add(helpCommand);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         SendMessage actualMessage = helpCommand.handle(updateMock);

@@ -1,18 +1,19 @@
 package edu.java.bot.mock;
 
-import edu.java.bot.command.Command;
+import edu.java.bot.command.CommandHandler;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MockCommandUtils {
 
-    public static Command getCommandMock(String commandName, String description) {
-        Command command = mock(Command.class);
+    public static CommandHandler getCommandMock(String commandName, String description) {
+        CommandHandler commandHandler = mock(CommandHandler.class);
 
         // stubbing
-        when(command.command()).thenReturn(commandName);
-        when(command.description()).thenReturn(description);
+        when(commandHandler.command()).thenReturn(commandName);
+        when(commandHandler.description()).thenReturn(description);
 
-        return command;
+        return commandHandler;
     }
 }

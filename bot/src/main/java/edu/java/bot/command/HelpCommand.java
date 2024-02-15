@@ -5,12 +5,12 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.List;
 
-public class HelpCommand implements Command {
+public class HelpCommand implements CommandHandler {
 
-    private final List<Command> commands;
+    private final List<CommandHandler> commandHandlers;
 
-    public HelpCommand(List<Command> commands) {
-        this.commands = commands;
+    public HelpCommand(List<CommandHandler> commandHandlers) {
+        this.commandHandlers = commandHandlers;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class HelpCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         StringBuilder message = new StringBuilder();
-        for (var command : commands) {
+        for (var command : commandHandlers) {
             message.append("*%s* - %s\n".formatted(command.command(), command.description()));
         }
         return new SendMessage(update.message().chat().id(), message.toString())

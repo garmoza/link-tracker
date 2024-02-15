@@ -29,7 +29,7 @@ class UntrackCommandTest {
 
     @Test
     void command() {
-        Command untrackCommand = new UntrackCommand(userRepository, trackedLinkService);
+        CommandHandler untrackCommand = new UntrackCommand(userRepository, trackedLinkService);
 
         String actualCommand = untrackCommand.command();
 
@@ -38,7 +38,7 @@ class UntrackCommandTest {
 
     @Test
     void description() {
-        Command untrackCommand = new UntrackCommand(userRepository, trackedLinkService);
+        CommandHandler untrackCommand = new UntrackCommand(userRepository, trackedLinkService);
 
         String actualDescription = untrackCommand.description();
 
