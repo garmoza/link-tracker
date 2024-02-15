@@ -7,5 +7,5 @@ public interface UserRepository {
 
     Optional<User> findUserById(long id);
 
-    void saveUser(User user);
+    User saveUser(User user);
 }

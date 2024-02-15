@@ -17,6 +17,8 @@ import edu.java.bot.repository.UserRepository;
 import edu.java.bot.repository.UserRepositoryImpl;
 import edu.java.bot.service.TrackedLinkService;
 import edu.java.bot.service.TrackedLinkServiceImpl;
+import edu.java.bot.service.UserService;
+import edu.java.bot.service.UserServiceImpl;
 import edu.java.bot.source.GitHubTrackableLink;
 import edu.java.bot.source.StackOverflowTrackableLink;
 import edu.java.bot.source.TrackableLink;
@@ -33,6 +35,7 @@ public class Bot implements UpdatesListener {
         ApplicationConfig appConfig = new ApplicationConfig(System.getenv("TELEGRAM_API_KEY"));
         bot = new TelegramBot(appConfig.telegramToken());
         UserRepository userRepository = new UserRepositoryImpl();
+        UserService userService = new UserServiceImpl(userRepository);
 
         List<TrackableLink> trackableLinks = new ArrayList<>();
         trackableLinks.add(new GitHubTrackableLink());
@@ -42,7 +45,7 @@ public class Bot implements UpdatesListener {
         commandHandlers = new ArrayList<>();
         commandHandlers.add(new HelpCommand(commandHandlers));
         commandHandlers.add(new ListCommand(userRepository));
-        commandHandlers.add(new StartCommand(userRepository, commandHandlers));
+        commandHandlers.add(new StartCommand(userService, commandHandlers));
         commandHandlers.add(new TrackCommand(userRepository, trackedLinkService));
         commandHandlers.add(new UntrackCommand(userRepository, trackedLinkService));
 

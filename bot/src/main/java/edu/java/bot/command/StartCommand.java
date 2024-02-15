@@ -3,17 +3,16 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.entity.User;
-import edu.java.bot.repository.UserRepository;
+import edu.java.bot.service.UserService;
 import java.util.List;
 
 public class StartCommand implements CommandHandler {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final List<CommandHandler> commandHandlers;
 
-    public StartCommand(UserRepository userRepository, List<CommandHandler> commandHandlers) {
-        this.userRepository = userRepository;
+    public StartCommand(UserService userService, List<CommandHandler> commandHandlers) {
+        this.userService = userService;
         this.commandHandlers = commandHandlers;
     }
 
@@ -30,10 +29,7 @@ public class StartCommand implements CommandHandler {
     @Override
     public SendMessage handle(Update update) {
         long userId = update.message().from().id();
-        boolean isNewUser = userRepository.findUserById(userId).isEmpty();
-        if (isNewUser) {
-            userRepository.saveUser(new User(userId));
-        }
+        userService.saveUser(userId);
         return getStartMessage(update);
     }
 

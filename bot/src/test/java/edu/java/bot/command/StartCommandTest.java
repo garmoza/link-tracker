@@ -12,6 +12,7 @@ import edu.java.bot.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import edu.java.bot.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -25,11 +26,11 @@ import static org.mockito.Mockito.when;
 class StartCommandTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Test
     void command() {
-        CommandHandler startCommand = new StartCommand(userRepository, List.of());
+        CommandHandler startCommand = new StartCommand(userService, List.of());
 
         String actualCommand = startCommand.command();
 
@@ -38,7 +39,7 @@ class StartCommandTest {
 
     @Test
     void description() {
-        CommandHandler startCommand = new StartCommand(userRepository, List.of());
+        CommandHandler startCommand = new StartCommand(userService, List.of());
 
         String actualDescription = startCommand.description();
 
@@ -49,8 +50,7 @@ class StartCommandTest {
     void handle_WithCommands() {
         CommandHandler commandHandler1 = MockCommandUtils.getCommandMock("/command", "description of command");
         CommandHandler commandHandler2 = MockCommandUtils.getCommandMock("/another", "another description");
-        when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        CommandHandler startCommand = new StartCommand(userRepository, List.of(commandHandler1, commandHandler2));
+        CommandHandler startCommand = new StartCommand(userService, List.of(commandHandler1, commandHandler2));
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
@@ -67,8 +67,7 @@ class StartCommandTest {
 
     @Test
     void handle_WithoutCommands() {
-        when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        CommandHandler startCommand = new StartCommand(userRepository, List.of());
+        CommandHandler startCommand = new StartCommand(userService, List.of());
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
@@ -84,8 +83,7 @@ class StartCommandTest {
     @Test
     void handle_WithSelfRef() {
         List<CommandHandler> commandHandlers = new ArrayList<>();
-        when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        CommandHandler startCommand = new StartCommand(userRepository, commandHandlers);
+        CommandHandler startCommand = new StartCommand(userService, commandHandlers);
         commandHandlers.add(startCommand);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
@@ -102,12 +100,12 @@ class StartCommandTest {
 
     @Test
     void handle_AddsNewUser() {
-        when(userRepository.findUserById(2L)).thenReturn(Optional.empty());
-        CommandHandler startCommand = new StartCommand(userRepository, List.of());
+        when(userService.saveUser(2L)).thenReturn(new User(2L));
+        CommandHandler startCommand = new StartCommand(userService, List.of());
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         startCommand.handle(updateMock);
 
-        verify(userRepository).saveUser(any(User.class));
+        verify(userService).saveUser(2L);
     }
 }
