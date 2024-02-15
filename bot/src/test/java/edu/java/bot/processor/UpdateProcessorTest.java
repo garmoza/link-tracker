@@ -45,10 +45,10 @@ class UpdateProcessorTest {
         when(commandHandler.supports(any(Update.class))).thenReturn(false);
         UpdateProcessor updateProcessor = new UpdateProcessor(List.of(commandHandler));
 
-        Update updateMock = MockUpdateUtils.getUpdateMock("/commandHandler param1 param2", 1L);
+        Update updateMock = MockUpdateUtils.getUpdateMock("/command param1 param2", 1L);
         SendMessage actualMessage = updateProcessor.process(updateMock);
 
-        SendMessage expectedMessage = new SendMessage(1L, "CommandHandler not supported.");
+        SendMessage expectedMessage = new SendMessage(1L, "Command not supported.");
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
 }

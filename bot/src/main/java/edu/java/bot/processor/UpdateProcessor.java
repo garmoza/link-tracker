@@ -27,7 +27,7 @@ public class UpdateProcessor {
                 return command.handle(update);
             }
         }
-        return new SendMessage(update.message().chat().id(), "CommandHandler not supported.");
+        return new SendMessage(update.message().chat().id(), "Command not supported.");
     }
 
     private SendMessage processText(Update update) {

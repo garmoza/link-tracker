@@ -60,7 +60,8 @@ class ListCommandTest {
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
-        SendMessage expectedMessage = new SendMessage(1L, "There are no tracked links.");
+        SendMessage expectedMessage = new SendMessage(1L, "There are no tracked links.")
+            .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
 

@@ -32,7 +32,8 @@ public class ListCommand extends AuthorizedCommand {
 
         Set<Link> links = user.getLinks();
         if (links.isEmpty()) {
-            return new SendMessage(chatId, "There are no tracked links.");
+            return new SendMessage(chatId, "There are no tracked links.")
+                .parseMode(ParseMode.Markdown);
         }
 
         StringBuilder message = new StringBuilder();
