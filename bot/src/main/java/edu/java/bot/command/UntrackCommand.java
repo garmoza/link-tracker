@@ -5,19 +5,19 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.Link;
 import edu.java.bot.entity.User;
-import edu.java.bot.repository.UserRepository;
 import edu.java.bot.service.TrackedLinkService;
+import edu.java.bot.service.UserService;
 import edu.java.bot.util.LinkParser;
 import edu.java.bot.util.URLParseException;
 import java.util.Optional;
 
 public class UntrackCommand extends AuthorizedCommand {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final TrackedLinkService trackedLinkService;
 
-    public UntrackCommand(UserRepository userRepository, TrackedLinkService trackedLinkService) {
-        this.userRepository = userRepository;
+    public UntrackCommand(UserService userService, TrackedLinkService trackedLinkService) {
+        this.userService = userService;
         this.trackedLinkService = trackedLinkService;
     }
 
@@ -68,7 +68,7 @@ public class UntrackCommand extends AuthorizedCommand {
     }
 
     @Override
-    UserRepository getUserRepository() {
-        return userRepository;
+    UserService getUserService() {
+        return userService;
     }
 }

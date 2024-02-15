@@ -5,8 +5,8 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
 import edu.java.bot.mock.MockUpdateUtils;
-import edu.java.bot.repository.UserRepository;
 import edu.java.bot.service.TrackedLinkService;
+import edu.java.bot.service.UserService;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,13 +23,13 @@ import static org.mockito.Mockito.when;
 class TrackCommandTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
     @Mock
     private TrackedLinkService trackedLinkService;
 
     @Test
     void command() {
-        CommandHandler trackCommand = new TrackCommand(userRepository, trackedLinkService);
+        CommandHandler trackCommand = new TrackCommand(userService, trackedLinkService);
 
         String actualCommand = trackCommand.command();
 
@@ -38,7 +38,7 @@ class TrackCommandTest {
 
     @Test
     void description() {
-        CommandHandler trackCommand = new TrackCommand(userRepository, trackedLinkService);
+        CommandHandler trackCommand = new TrackCommand(userService, trackedLinkService);
 
         String actualDescription = trackCommand.description();
 
@@ -49,7 +49,7 @@ class TrackCommandTest {
     void authorizedHandle_SuccessAddingLink() {
         when(trackedLinkService.isTrackableLink(any())).thenReturn(true);
         when(trackedLinkService.trackLink(any(), any())).thenReturn(true);
-        TrackCommand trackCommand = new TrackCommand(userRepository, trackedLinkService);
+        TrackCommand trackCommand = new TrackCommand(userService, trackedLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/track https://example.com/", 1L);
         User user = new User(2L);
@@ -64,7 +64,7 @@ class TrackCommandTest {
     void authorizedHandle_LinkAlreadyTracking() {
         when(trackedLinkService.isTrackableLink(any())).thenReturn(true);
         when(trackedLinkService.trackLink(any(), any())).thenReturn(false);
-        TrackCommand trackCommand = new TrackCommand(userRepository, trackedLinkService);
+        TrackCommand trackCommand = new TrackCommand(userService, trackedLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/track https://example.com/", 1L);
         SendMessage actualMessage = trackCommand.authorizedHandle(updateMock, new User(2L));
@@ -76,7 +76,7 @@ class TrackCommandTest {
 
     @Test
     void authorizedHandle_WrongFormat_NoParameters() {
-        TrackCommand trackCommand = new TrackCommand(userRepository, trackedLinkService);
+        TrackCommand trackCommand = new TrackCommand(userService, trackedLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/track", 1L);
         SendMessage actualMessage = trackCommand.authorizedHandle(updateMock, new User(2L));
@@ -88,7 +88,7 @@ class TrackCommandTest {
 
     @Test
     void authorizedHandle_WrongFormat_ManyParameters() {
-        TrackCommand trackCommand = new TrackCommand(userRepository, trackedLinkService);
+        TrackCommand trackCommand = new TrackCommand(userService, trackedLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/track link1 link2", 1L);
         SendMessage actualMessage = trackCommand.authorizedHandle(updateMock, new User(2L));
@@ -100,8 +100,8 @@ class TrackCommandTest {
 
     @Test
     void handle_NotCallAuthorizedHandle_WhenUserNotFound() {
-        TrackCommand trackCommand = spy(new TrackCommand(userRepository, trackedLinkService));
-        when(userRepository.findUserById(2L)).thenReturn(Optional.empty());
+        TrackCommand trackCommand = spy(new TrackCommand(userService, trackedLinkService));
+        when(userService.findUserById(2L)).thenReturn(Optional.empty());
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         trackCommand.handle(updateMock);

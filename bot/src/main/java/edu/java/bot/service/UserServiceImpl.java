@@ -2,6 +2,7 @@ package edu.java.bot.service;
 
 import edu.java.bot.entity.User;
 import edu.java.bot.repository.UserRepository;
+import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
@@ -9,6 +10,11 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public Optional<User> findUserById(long id) {
+        return userRepository.findUserById(id);
     }
 
     @Override

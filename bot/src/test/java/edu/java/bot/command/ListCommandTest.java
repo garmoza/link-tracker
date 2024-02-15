@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.Link;
 import edu.java.bot.entity.User;
 import edu.java.bot.mock.MockUpdateUtils;
-import edu.java.bot.repository.UserRepository;
+import edu.java.bot.service.UserService;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -20,11 +20,11 @@ import static org.mockito.Mockito.when;
 class ListCommandTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Test
     void command() {
-        CommandHandler listCommand = new ListCommand(userRepository);
+        CommandHandler listCommand = new ListCommand(userService);
 
         String actualCommand = listCommand.command();
 
@@ -33,7 +33,7 @@ class ListCommandTest {
 
     @Test
     void description() {
-        CommandHandler listCommand = new ListCommand(userRepository);
+        CommandHandler listCommand = new ListCommand(userService);
 
         String actualDescription = listCommand.description();
 
@@ -42,8 +42,8 @@ class ListCommandTest {
 
     @Test
     void handle_UserIsNotRegistered() {
-        when(userRepository.findUserById(2L)).thenReturn(Optional.empty());
-        CommandHandler listCommand = new ListCommand(userRepository);
+        when(userService.findUserById(2L)).thenReturn(Optional.empty());
+        CommandHandler listCommand = new ListCommand(userService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
@@ -54,8 +54,8 @@ class ListCommandTest {
 
     @Test
     void handle_UserHasNoLinks() {
-        when(userRepository.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        CommandHandler listCommand = new ListCommand(userRepository);
+        when(userService.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
+        CommandHandler listCommand = new ListCommand(userService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);
@@ -70,8 +70,8 @@ class ListCommandTest {
         Set<Link> links = user.getLinks();
         links.add(new Link("url1", "host"));
         links.add(new Link("url2", "host"));
-        when(userRepository.findUserById(2L)).thenReturn(Optional.of(user));
-        CommandHandler listCommand = new ListCommand(userRepository);
+        when(userService.findUserById(2L)).thenReturn(Optional.of(user));
+        CommandHandler listCommand = new ListCommand(userService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessage actualMessage = listCommand.handle(updateMock);

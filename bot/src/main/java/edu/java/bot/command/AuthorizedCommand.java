@@ -3,7 +3,7 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.User;
-import edu.java.bot.repository.UserRepository;
+import edu.java.bot.service.UserService;
 import java.util.Optional;
 
 public abstract class AuthorizedCommand implements CommandHandler {
@@ -13,7 +13,7 @@ public abstract class AuthorizedCommand implements CommandHandler {
         long chatId = update.message().chat().id();
         long userId = update.message().from().id();
 
-        Optional<User> userOptional = getUserRepository().findUserById(userId);
+        Optional<User> userOptional = getUserService().findUserById(userId);
         if (userOptional.isEmpty()) {
             return new SendMessage(chatId, "User is not registered.");
         }
@@ -23,5 +23,5 @@ public abstract class AuthorizedCommand implements CommandHandler {
 
     abstract SendMessage authorizedHandle(Update update, User user);
 
-    abstract UserRepository getUserRepository();
+    abstract UserService getUserService();
 }

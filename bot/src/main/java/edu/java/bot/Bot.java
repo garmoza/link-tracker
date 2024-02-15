@@ -44,10 +44,10 @@ public class Bot implements UpdatesListener {
 
         commandHandlers = new ArrayList<>();
         commandHandlers.add(new HelpCommand(commandHandlers));
-        commandHandlers.add(new ListCommand(userRepository));
+        commandHandlers.add(new ListCommand(userService));
         commandHandlers.add(new StartCommand(userService, commandHandlers));
-        commandHandlers.add(new TrackCommand(userRepository, trackedLinkService));
-        commandHandlers.add(new UntrackCommand(userRepository, trackedLinkService));
+        commandHandlers.add(new TrackCommand(userService, trackedLinkService));
+        commandHandlers.add(new UntrackCommand(userService, trackedLinkService));
 
         updateProcessor = new UpdateProcessor(commandHandlers);
     }

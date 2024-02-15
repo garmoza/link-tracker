@@ -5,15 +5,15 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.Link;
 import edu.java.bot.entity.User;
-import edu.java.bot.repository.UserRepository;
+import edu.java.bot.service.UserService;
 import java.util.Set;
 
 public class ListCommand extends AuthorizedCommand {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public ListCommand(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public ListCommand(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ListCommand extends AuthorizedCommand {
     }
 
     @Override
-    UserRepository getUserRepository() {
-        return userRepository;
+    UserService getUserService() {
+        return userService;
     }
 }
