@@ -2,7 +2,7 @@ package edu.java.bot.service;
 
 import edu.java.bot.entity.Link;
 import edu.java.bot.entity.User;
-import edu.java.bot.link.TrackableLink;
+import edu.java.bot.source.TrackableLink;
 import java.util.List;
 
 public class TrackedLinkServiceImpl implements TrackedLinkService {

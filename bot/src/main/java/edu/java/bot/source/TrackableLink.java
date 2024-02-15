@@ -1,10 +1,8 @@
-package edu.java.bot.link;
+package edu.java.bot.source;
 
 import edu.java.bot.entity.Link;
 
 public interface TrackableLink {
-
-    String resourceName();
 
     String host();
 

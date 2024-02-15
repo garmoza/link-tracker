@@ -1,11 +1,6 @@
-package edu.java.bot.link;
+package edu.java.bot.source;
 
 public class StackOverflowTrackableLink implements TrackableLink {
-
-    @Override
-    public String resourceName() {
-        return "Stack Overflow";
-    }
 
     @Override
     public String host() {

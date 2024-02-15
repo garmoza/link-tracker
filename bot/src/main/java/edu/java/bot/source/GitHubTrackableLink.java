@@ -1,11 +1,6 @@
-package edu.java.bot.link;
+package edu.java.bot.source;
 
 public class GitHubTrackableLink implements TrackableLink {
-
-    @Override
-    public String resourceName() {
-        return "GitHub";
-    }
 
     @Override
     public String host() {

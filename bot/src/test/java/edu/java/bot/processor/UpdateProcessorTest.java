@@ -1,10 +1,12 @@
-package edu.java.bot.service;
+package edu.java.bot.processor;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.Command;
 import edu.java.bot.mock.MockUpdateUtils;
 import java.util.List;
+
+import edu.java.bot.processor.UpdateProcessor;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,14 +14,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class UpdateServiceTest {
+class UpdateProcessorTest {
 
     @Test
     void process_ProcessText() {
-        UpdateService updateService = new UpdateService(List.of());
+        UpdateProcessor updateProcessor = new UpdateProcessor(List.of());
 
         Update updateMock = MockUpdateUtils.getUpdateMock("Test message without command", 1L);
-        SendMessage actualMessage = updateService.process(updateMock);
+        SendMessage actualMessage = updateProcessor.process(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, "Process text...");
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
@@ -30,10 +32,10 @@ class UpdateServiceTest {
         Command command = Mockito.mock(Command.class);
         when(command.supports(any(Update.class))).thenReturn(true);
         when(command.handle(any(Update.class))).thenReturn(new SendMessage(1L, "Text"));
-        UpdateService updateService = new UpdateService(List.of(command));
+        UpdateProcessor updateProcessor = new UpdateProcessor(List.of(command));
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/command param1 param2", 1L);
-        updateService.process(updateMock);
+        updateProcessor.process(updateMock);
 
         verify(command).handle(any(Update.class));
     }
@@ -42,10 +44,10 @@ class UpdateServiceTest {
     void process_ProcessCommand_CommandNotSupported() {
         Command command = Mockito.mock(Command.class);
         when(command.supports(any(Update.class))).thenReturn(false);
-        UpdateService updateService = new UpdateService(List.of(command));
+        UpdateProcessor updateProcessor = new UpdateProcessor(List.of(command));
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/command param1 param2", 1L);
-        SendMessage actualMessage = updateService.process(updateMock);
+        SendMessage actualMessage = updateProcessor.process(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, "Command not supported.");
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
