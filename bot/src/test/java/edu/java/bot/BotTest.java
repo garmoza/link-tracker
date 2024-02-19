@@ -3,6 +3,7 @@ package edu.java.bot;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.BotCommand;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
@@ -65,8 +66,10 @@ class BotTest {
         when(updateProcessor.process(any(Update.class))).thenReturn(new SendMessage(1L, "message"));
 
         Bot bot = new Bot(telegramBot, List.of(), updateProcessor);
-        Update update = mock(Update.class);
-        bot.process(List.of(update));
+        Update updateMock = mock(Update.class);
+        Message message = mock(Message.class);
+        when(updateMock.message()).thenReturn(message);
+        bot.process(List.of(updateMock));
 
         verify(telegramBot).execute(any(SendMessage.class));
     }

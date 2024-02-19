@@ -1,15 +1,14 @@
 package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.Link;
 import edu.java.bot.entity.User;
 import edu.java.bot.service.TrackedLinkService;
 import edu.java.bot.service.UserService;
 import edu.java.bot.util.LinkParser;
+import edu.java.bot.util.SendMessageFormatter;
 import edu.java.bot.util.URLParseException;
-import java.util.Optional;
 
 public class TrackCommand extends AuthorizedCommand {
 
@@ -33,38 +32,36 @@ public class TrackCommand extends AuthorizedCommand {
 
     @Override
     SendMessage authorizedHandle(Update update, User user) {
-        long chatId = update.message().chat().id();
         String[] params = update.message().text().split(" ");
 
-        Optional<String> resultMessage = Optional.empty();
+        SendMessageFormatter formatter = new SendMessageFormatter(update);
 
         if (params.length != 2) {
-            resultMessage = Optional.of("Pls, enter the command in *" + command() + " URL* format.");
+            formatter.append("Pls, enter the command in *%s URL* format.", command());
         }
 
         Link link = null;
-        if (resultMessage.isEmpty()) {
+        if (formatter.isEmpty()) {
             try {
                 link = LinkParser.parse(params[1]);
             } catch (URLParseException e) {
-                resultMessage = Optional.of(e.getMessage());
+                formatter.append(e.getMessage());
             }
         }
 
-        if (resultMessage.isEmpty() && !trackedLinkService.isTrackableLink(link)) {
-            resultMessage = Optional.of("Resource not supported.");
+        if (formatter.isEmpty() && !trackedLinkService.isTrackableLink(link)) {
+            formatter.append("Resource not supported.");
         }
 
-        if (resultMessage.isEmpty() && !trackedLinkService.trackLink(user, link)) {
-            resultMessage = Optional.of("Link already tracked.");
+        if (formatter.isEmpty() && !trackedLinkService.trackLink(user, link)) {
+            formatter.append("Link already tracked.");
         }
 
-        if (resultMessage.isEmpty()) {
-            resultMessage = Optional.of("Link *" + params[1] + "* successfully added.");
+        if (formatter.isEmpty()) {
+            formatter.append("Link *%s* successfully added.", params[1]);
         }
 
-        return new SendMessage(chatId, resultMessage.get())
-            .parseMode(ParseMode.Markdown);
+        return formatter.getMessage();
     }
 
     @Override

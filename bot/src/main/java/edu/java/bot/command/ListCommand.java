@@ -1,11 +1,11 @@
 package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.entity.Link;
 import edu.java.bot.entity.User;
 import edu.java.bot.service.UserService;
+import edu.java.bot.util.SendMessageFormatter;
 import java.util.Set;
 
 public class ListCommand extends AuthorizedCommand {
@@ -28,21 +28,17 @@ public class ListCommand extends AuthorizedCommand {
 
     @Override
     public SendMessage authorizedHandle(Update update, User user) {
-        long chatId = update.message().chat().id();
+        SendMessageFormatter formatter = new SendMessageFormatter(update);
 
         Set<Link> links = user.getLinks();
         if (links.isEmpty()) {
-            return new SendMessage(chatId, "There are no tracked links.")
-                .parseMode(ParseMode.Markdown);
+            formatter.append("There are no tracked links.");
+        } else {
+            formatter.append("Tracked links:\n");
+            formatter.appendLinkList(links);
         }
 
-        StringBuilder message = new StringBuilder();
-        message.append("Tracked links:\n");
-        for (var link : links) {
-            message.append("- %s\n".formatted(link.getUrl()));
-        }
-        return new SendMessage(chatId, message.toString())
-            .parseMode(ParseMode.Markdown);
+        return formatter.getMessage();
     }
 
     @Override

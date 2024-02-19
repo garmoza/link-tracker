@@ -1,8 +1,8 @@
 package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.util.SendMessageFormatter;
 import java.util.List;
 
 public class HelpCommand implements CommandHandler {
@@ -25,11 +25,8 @@ public class HelpCommand implements CommandHandler {
 
     @Override
     public SendMessage handle(Update update) {
-        StringBuilder message = new StringBuilder();
-        for (var command : commandHandlers) {
-            message.append("*%s* - %s\n".formatted(command.command(), command.description()));
-        }
-        return new SendMessage(update.message().chat().id(), message.toString())
-            .parseMode(ParseMode.Markdown);
+        SendMessageFormatter formatter = new SendMessageFormatter(update);
+        formatter.appendHandlerList(commandHandlers);
+        return formatter.getMessage();
     }
 }

@@ -16,10 +16,10 @@ public class TrackedLinkServiceImpl implements TrackedLinkService {
 
     @Override
     public boolean isTrackableLink(Link link) {
-        for (var trackable : trackableLinks) {
-             if (trackable.supports(link)) {
-                 return true;
-             }
+        for (var trackableLink : trackableLinks) {
+            if (trackableLink.supports(link)) {
+                return true;
+            }
         }
         return false;
     }

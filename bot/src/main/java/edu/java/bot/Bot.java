@@ -29,7 +29,9 @@ public class Bot implements UpdatesListener {
     @Override
     public int process(List<Update> updates) {
         for (var update : updates) {
-            telegramBot.execute(updateProcessor.process(update));
+            if (update.message() != null) {
+                telegramBot.execute(updateProcessor.process(update));
+            }
         }
 
         return UpdatesListener.CONFIRMED_UPDATES_ALL;

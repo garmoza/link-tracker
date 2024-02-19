@@ -1,9 +1,9 @@
 package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.service.UserService;
+import edu.java.bot.util.SendMessageFormatter;
 import java.util.List;
 
 public class StartCommand implements CommandHandler {
@@ -35,15 +35,12 @@ public class StartCommand implements CommandHandler {
 
     private SendMessage getStartMessage(Update update) {
         String name = update.message().from().firstName();
-        StringBuilder message = new StringBuilder();
-        message.append("""
+        SendMessageFormatter formatter = new SendMessageFormatter(update);
+        formatter.append("""
             Hello, *%s*!
             You are successfully registered. Pls, use commands:
-            """.formatted(name));
-        for (var command : commandHandlers) {
-            message.append("- %s - %s.\n".formatted(command.command(), command.description()));
-        }
-        return new SendMessage(update.message().chat().id(), message.toString())
-            .parseMode(ParseMode.Markdown);
+            """, name);
+        formatter.appendHandlerList(commandHandlers);
+        return formatter.getMessage();
     }
 }

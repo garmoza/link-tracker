@@ -19,7 +19,7 @@ public class LinkParser {
         try {
             return new URI(url).toURL();
         } catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
-            throw new URLParseException();
+            throw new URLParseException(e);
         }
     }
 }

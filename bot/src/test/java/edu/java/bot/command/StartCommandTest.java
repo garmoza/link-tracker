@@ -53,8 +53,8 @@ class StartCommandTest {
         SendMessage expectedMessage = new SendMessage(1L, """
             Hello, *Bob*!
             You are successfully registered. Pls, use commands:
-            - /command - description of command.
-            - /another - another description.
+            */command* - description of command
+            */another* - another description
             """)
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
@@ -87,7 +87,7 @@ class StartCommandTest {
         SendMessage expectedMessage = new SendMessage(1L, """
             Hello, *Bob*!
             You are successfully registered. Pls, use commands:
-            - /start - register a user.
+            */start* - register a user
             """)
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());

@@ -35,7 +35,7 @@ public class BotApplication {
     }
 
     private static Bot createBot() {
-        ApplicationConfig appConfig = new ApplicationConfig(System.getenv("TELEGRAM_API_KEY"));
+        ApplicationConfig appConfig = new ApplicationConfig(System.getenv("TELEGRAM_TOKEN"));
         TelegramBot telegramBot = new TelegramBot(appConfig.telegramToken());
 
         UserRepository userRepository = new UserRepositoryImpl();
