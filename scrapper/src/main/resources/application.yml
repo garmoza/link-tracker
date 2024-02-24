@@ -3,6 +3,8 @@ app:
     enable: true
     interval: 10s
     force-check-delay: 10s
+  client:
+    git-hub-api-url: "https://api.github.com"
 
 spring:
   application:
