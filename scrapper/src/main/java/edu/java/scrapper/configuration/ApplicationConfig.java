@@ -15,6 +15,6 @@ public record ApplicationConfig(
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
 
-    public record Client(String gitHubApiUrl) {
+    public record Client(String githubApiUrl, String stackoverflowApiUrl) {
     }
 }

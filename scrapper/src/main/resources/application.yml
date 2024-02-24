@@ -4,7 +4,8 @@ app:
     interval: 10s
     force-check-delay: 10s
   client:
-    git-hub-api-url: "https://api.github.com"
+    github-api-url: "https://api.github.com"
+    stackoverflow-api-url: "https://api.stackexchange.com/2.3"
 
 spring:
   application:

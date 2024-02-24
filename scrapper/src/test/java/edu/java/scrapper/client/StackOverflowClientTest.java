@@ -2,8 +2,9 @@ package edu.java.scrapper.client;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import edu.java.scrapper.dto.github.RepositoryResponse;
+import edu.java.scrapper.dto.stackoverflow.QuestionResponse;
 import java.time.OffsetDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WireMockTest
-class GitHubClientTest {
+class StackOverflowClientTest {
 
     @Autowired
-    private GitHubClient gitHubClient;
+    private StackOverflowClient stackOverflowClient;
 
     @RegisterExtension
     private static final WireMockExtension wireMock = WireMockExtension.newInstance()
@@ -30,32 +31,36 @@ class GitHubClientTest {
         .build();
 
     @DynamicPropertySource
-    private static void gitHubClientProperties(DynamicPropertyRegistry registry) {
-        registry.add("app.client.git-hub-api-url", wireMock::baseUrl);
+    private static void stackOverflowClientProperties(DynamicPropertyRegistry registry) {
+        registry.add("app.client.stackoverflow-api-url", wireMock::baseUrl);
     }
 
     @Test
-    void fetchRepository() {
-        wireMock.stubFor(get("/repos/test-user/test-repo")
+    void fetchQuestion() {
+        wireMock.stubFor(get("/questions/123?site=stackoverflow")
             .willReturn(ok()
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody("""
                     {
-                        "name": "test-repo",
-                        "updated_at": "2024-02-22T20:38:57Z",
-                        "pushed_at": "2024-02-22T20:45:55Z"
+                        "items": [
+                            {
+                                "title": "Title of question",
+                                "last_activity_date": "2023-10-03T12:23:54Z"
+                            }
+                        ]
                     }
                     """)));
 
-        Mono<RepositoryResponse> actualMono = gitHubClient.fetchRepository("test-user", "test-repo");
+        Mono<QuestionResponse> actualMono = stackOverflowClient.fetchQuestion("123");
 
-        RepositoryResponse expected = RepositoryResponse.builder()
-            .name("test-repo")
-            .updatedAt(OffsetDateTime.parse("2024-02-22T20:38:57Z"))
-            .pushedAt(OffsetDateTime.parse("2024-02-22T20:45:55Z"))
-            .build();
+        QuestionResponse expected = createQuestion("Title of question", "2023-10-03T12:23:54Z");
         StepVerifier.create(actualMono)
             .expectNext(expected)
             .verifyComplete();
+    }
+
+    private QuestionResponse createQuestion(String title, String lastActivityDate) {
+        var item = new QuestionResponse.Item(title, OffsetDateTime.parse(lastActivityDate));
+        return new QuestionResponse(List.of(item));
     }
 }

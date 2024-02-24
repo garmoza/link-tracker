@@ -1,15 +1,13 @@
 package edu.java.scrapper.dto.github;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import lombok.Builder;
 
 @Builder
 public record RepositoryResponse(
-    String name,
-    @JsonAlias({"updated_at"})
-    OffsetDateTime updatedAt,
-    @JsonAlias({"pushed_at"})
-    OffsetDateTime pushedAt
+    @JsonProperty("name") String name,
+    @JsonProperty("updated_at") OffsetDateTime updatedAt,
+    @JsonProperty("pushed_at") OffsetDateTime pushedAt
 ) {
 }
