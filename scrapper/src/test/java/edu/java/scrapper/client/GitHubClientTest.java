@@ -11,11 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WireMockTest
@@ -47,15 +46,13 @@ class GitHubClientTest {
                     }
                     """)));
 
-        Mono<RepositoryResponse> actualMono = gitHubClient.fetchRepository("test-user", "test-repo");
+        RepositoryResponse actual = gitHubClient.fetchRepository("test-user", "test-repo").block();
 
         RepositoryResponse expected = RepositoryResponse.builder()
             .name("test-repo")
             .updatedAt(OffsetDateTime.parse("2024-02-22T20:38:57Z"))
             .pushedAt(OffsetDateTime.parse("2024-02-22T20:45:55Z"))
             .build();
-        StepVerifier.create(actualMono)
-            .expectNext(expected)
-            .verifyComplete();
+        assertEquals(expected, actual);
     }
 }

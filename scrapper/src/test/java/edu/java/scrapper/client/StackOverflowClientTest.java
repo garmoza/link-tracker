@@ -12,11 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WireMockTest
@@ -51,12 +50,10 @@ class StackOverflowClientTest {
                     }
                     """)));
 
-        Mono<QuestionResponse> actualMono = stackOverflowClient.fetchQuestion("123");
+        QuestionResponse actual = stackOverflowClient.fetchQuestion("123").block();
 
         QuestionResponse expected = createQuestion("Title of question", "2023-10-03T12:23:54Z");
-        StepVerifier.create(actualMono)
-            .expectNext(expected)
-            .verifyComplete();
+        assertEquals(expected, actual);
     }
 
     private QuestionResponse createQuestion(String title, String lastActivityDate) {
