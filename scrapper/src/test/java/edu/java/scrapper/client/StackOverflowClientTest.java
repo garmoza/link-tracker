@@ -12,6 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
@@ -35,7 +39,7 @@ class StackOverflowClientTest {
     }
 
     @Test
-    void fetchQuestion() {
+    void fetchQuestion_ItemExist() {
         wireMock.stubFor(get("/questions/123?site=stackoverflow")
             .willReturn(ok()
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -50,7 +54,7 @@ class StackOverflowClientTest {
                     }
                     """)));
 
-        QuestionResponse actual = stackOverflowClient.fetchQuestion("123").block();
+        QuestionResponse actual = stackOverflowClient.fetchQuestion(123).block();
 
         QuestionResponse expected = createQuestion("Title of question", "2023-10-03T12:23:54Z");
         assertEquals(expected, actual);
@@ -59,5 +63,34 @@ class StackOverflowClientTest {
     private QuestionResponse createQuestion(String title, String lastActivityDate) {
         var item = new QuestionResponse.Item(title, OffsetDateTime.parse(lastActivityDate));
         return new QuestionResponse(List.of(item));
+    }
+
+    @Test
+    void fetchQuestion_NoItems_ReturnsMonoEmpty() {
+        wireMock.stubFor(get("/questions/123?site=stackoverflow")
+            .willReturn(ok()
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .withBody("""
+                    {
+                        "items": []
+                    }
+                    """)));
+
+        Mono<QuestionResponse> result = stackOverflowClient.fetchQuestion(123);
+
+        StepVerifier.create(result)
+            .verifyComplete();
+    }
+
+    @Test
+    void fetchQuestion_UnexpectedResponseCode_ExpectsError() {
+        wireMock.stubFor(get("/questions/123?site=stackoverflow")
+            .willReturn(aResponse().withStatus(418)));
+
+        Mono<QuestionResponse> result = stackOverflowClient.fetchQuestion(123);
+
+        StepVerifier.create(result)
+            .expectError(WebClientResponseException.class)
+            .verify();
     }
 }

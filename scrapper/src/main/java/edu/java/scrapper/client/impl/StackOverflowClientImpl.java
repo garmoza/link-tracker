@@ -15,10 +15,11 @@ public class StackOverflowClientImpl extends AbstractWebClient implements StackO
     }
 
     @Override
-    public Mono<QuestionResponse> fetchQuestion(String id) {
+    public Mono<QuestionResponse> fetchQuestion(int id) {
         return webClient.get()
             .uri("/questions/" + id + "?site=stackoverflow")
             .retrieve()
-            .bodyToMono(QuestionResponse.class);
+            .bodyToMono(QuestionResponse.class)
+            .filter(response -> response.items() != null && !response.items().isEmpty());
     }
 }

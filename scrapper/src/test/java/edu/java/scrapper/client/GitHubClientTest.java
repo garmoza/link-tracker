@@ -11,7 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.notFound;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +39,7 @@ class GitHubClientTest {
     }
 
     @Test
-    void fetchRepository() {
+    void fetchRepository_Ok() {
         wireMock.stubFor(get("/repos/test-user/test-repo")
             .willReturn(ok()
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -54,5 +59,28 @@ class GitHubClientTest {
             .pushedAt(OffsetDateTime.parse("2024-02-22T20:45:55Z"))
             .build();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void fetchRepository_NotFound_ReturnsMonoEmpty() {
+        wireMock.stubFor(get("/repos/test-user/test-repo")
+            .willReturn(notFound()));
+
+        Mono<RepositoryResponse> result = gitHubClient.fetchRepository("test-user", "test-repo");
+
+        StepVerifier.create(result)
+            .verifyComplete();
+    }
+
+    @Test
+    void fetchRepository_UnexpectedResponseCode_ExpectsError() {
+        wireMock.stubFor(get("/repos/test-user/test-repo")
+            .willReturn(aResponse().withStatus(418)));
+
+        Mono<RepositoryResponse> result = gitHubClient.fetchRepository("test-user", "test-repo");
+
+        StepVerifier.create(result)
+            .expectError(WebClientResponseException.class)
+            .verify();
     }
 }

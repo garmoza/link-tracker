@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface StackOverflowClient {
 
-    Mono<QuestionResponse> fetchQuestion(String id);
+    Mono<QuestionResponse> fetchQuestion(int id);
 }

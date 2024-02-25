@@ -2,6 +2,8 @@ package edu.java.scrapper.client.impl;
 
 import edu.java.scrapper.client.GitHubClient;
 import edu.java.scrapper.dto.github.RepositoryResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 public class GitHubClientImpl extends AbstractWebClient implements GitHubClient {
@@ -19,6 +21,10 @@ public class GitHubClientImpl extends AbstractWebClient implements GitHubClient 
         return webClient.get()
             .uri("/repos/" + username + "/" + repo)
             .retrieve()
-            .bodyToMono(RepositoryResponse.class);
+            .bodyToMono(RepositoryResponse.class)
+            .onErrorResume(
+                WebClientResponseException.class,
+                ex -> ex.getStatusCode() == HttpStatus.NOT_FOUND ? Mono.empty() : Mono.error(ex)
+            );
     }
 }
