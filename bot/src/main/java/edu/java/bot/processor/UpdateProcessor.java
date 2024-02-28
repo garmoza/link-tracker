@@ -4,14 +4,14 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.CommandHandler;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class UpdateProcessor {
 
     private final List<CommandHandler> commandHandlers;
-
-    public UpdateProcessor(List<CommandHandler> commandHandlers) {
-        this.commandHandlers = commandHandlers;
-    }
 
     public SendMessage process(Update update) {
         if (update.message().text().startsWith("/")) {

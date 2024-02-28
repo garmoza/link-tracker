@@ -9,16 +9,15 @@ import edu.java.bot.service.UserService;
 import edu.java.bot.util.LinkParser;
 import edu.java.bot.util.SendMessageFormatter;
 import edu.java.bot.util.URLParseException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class TrackCommand extends AuthorizedCommand {
 
     private final UserService userService;
     private final TrackedLinkService trackedLinkService;
-
-    public TrackCommand(UserService userService, TrackedLinkService trackedLinkService) {
-        this.userService = userService;
-        this.trackedLinkService = trackedLinkService;
-    }
 
     @Override
     public String command() {

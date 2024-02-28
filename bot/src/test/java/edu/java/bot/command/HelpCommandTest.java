@@ -40,30 +40,17 @@ class HelpCommandTest {
         SendMessage actualMessage = helpCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """
-            */command* - description of command
             */another* - another description
+            */command* - description of command
+            */help* - display all available commands
             """)
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
 
     @Test
-    void handle_WithoutCommands() {
+    void handle_WithoutOtherCommands() {
         CommandHandler helpCommand = new HelpCommand(List.of());
-
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L);
-        SendMessage actualMessage = helpCommand.handle(updateMock);
-
-        SendMessage expectedMessage = new SendMessage(1L, "")
-            .parseMode(ParseMode.Markdown);
-        assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
-    }
-
-    @Test
-    void handle_WithSelfRef() {
-        List<CommandHandler> commandHandlers = new ArrayList<>();
-        CommandHandler helpCommand = new HelpCommand(commandHandlers);
-        commandHandlers.add(helpCommand);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         SendMessage actualMessage = helpCommand.handle(updateMock);

@@ -3,14 +3,12 @@ package edu.java.bot.repository;
 import edu.java.bot.entity.User;
 import java.util.HashMap;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private final HashMap<Long, User> users;
-
-    public UserRepositoryImpl() {
-        users = new HashMap<>();
-    }
+    private final HashMap<Long, User> users = new HashMap<>();
 
     @Override
     public Optional<User> findUserById(long id) {

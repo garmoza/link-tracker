@@ -7,7 +7,6 @@ import edu.java.bot.entity.User;
 import edu.java.bot.mock.MockCommandUtils;
 import edu.java.bot.mock.MockUpdateUtils;
 import edu.java.bot.service.UserService;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,33 +52,17 @@ class StartCommandTest {
         SendMessage expectedMessage = new SendMessage(1L, """
             Hello, *Bob*!
             You are successfully registered. Pls, use commands:
-            */command* - description of command
             */another* - another description
+            */command* - description of command
+            */start* - register a user
             """)
             .parseMode(ParseMode.Markdown);
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
 
     @Test
-    void handle_WithoutCommands() {
+    void handle_WithoutOtherCommands() {
         CommandHandler startCommand = new StartCommand(userService, List.of());
-
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
-        SendMessage actualMessage = startCommand.handle(updateMock);
-
-        SendMessage expectedMessage = new SendMessage(1L, """
-            Hello, *Bob*!
-            You are successfully registered. Pls, use commands:
-            """)
-            .parseMode(ParseMode.Markdown);
-        assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
-    }
-
-    @Test
-    void handle_WithSelfRef() {
-        List<CommandHandler> commandHandlers = new ArrayList<>();
-        CommandHandler startCommand = new StartCommand(userService, commandHandlers);
-        commandHandlers.add(startCommand);
 
         Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);

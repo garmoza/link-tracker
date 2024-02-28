@@ -7,14 +7,14 @@ import edu.java.bot.entity.User;
 import edu.java.bot.service.UserService;
 import edu.java.bot.util.SendMessageFormatter;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class ListCommand extends AuthorizedCommand {
 
     private final UserService userService;
-
-    public ListCommand(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     public String command() {
