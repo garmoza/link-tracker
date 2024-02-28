@@ -49,7 +49,7 @@ class BotTest {
         when(commandHandler.toApiCommand()).thenReturn(new BotCommand("/command", "description"));
         List<CommandHandler> commandHandlers = List.of(commandHandler);
 
-        Bot bot = new Bot(telegramBot, commandHandlers, updateProcessor);
+        new Bot(telegramBot, commandHandlers, updateProcessor);
 
         ArgumentCaptor<SetMyCommands> captor = ArgumentCaptor.forClass(SetMyCommands.class);
         verify(telegramBot).execute(captor.capture());
