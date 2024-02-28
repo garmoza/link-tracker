@@ -8,20 +8,28 @@ import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.command.CommandHandler;
 import edu.java.bot.processor.UpdateProcessor;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Bot implements UpdatesListener {
 
     private final TelegramBot telegramBot;
     private final List<CommandHandler> commandHandlers;
     private final UpdateProcessor updateProcessor;
 
-    public Bot(TelegramBot telegramBot, List<CommandHandler> commandHandlers, UpdateProcessor updateProcessor) {
+    public Bot(
+        TelegramBot telegramBot,
+        List<CommandHandler> commandHandlers,
+        UpdateProcessor updateProcessor
+    ) {
         this.telegramBot = telegramBot;
         this.commandHandlers = commandHandlers;
         this.updateProcessor = updateProcessor;
+
+        setUpBot();
     }
 
-    public void start() {
+    private void setUpBot() {
         telegramBot.setUpdatesListener(this);
         setUpMenuCommands();
     }

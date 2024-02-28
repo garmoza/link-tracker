@@ -30,26 +30,26 @@ class BotTest {
     @Mock
     private TelegramBot telegramBot;
     @Mock
+    private List<CommandHandler> commandHandlers;
+    @Mock
     private UpdateProcessor updateProcessor;
 
     @Test
-    void start_CallSetUpdatesListener() {
+    void setUpBot_CallSetUpdatesListener() {
         doNothing().when(telegramBot).setUpdatesListener(any(UpdatesListener.class));
 
-        Bot bot = new Bot(telegramBot, List.of(), updateProcessor);
-        bot.start();
+        Bot bot = new Bot(telegramBot, commandHandlers, updateProcessor);
 
         verify(telegramBot).setUpdatesListener(bot);
     }
 
     @Test
-    void start_SetMyCommands() {
+    void setUpBot_setUpMenuCommands() {
         CommandHandler commandHandler = mock(CommandHandler.class);
         when(commandHandler.toApiCommand()).thenReturn(new BotCommand("/command", "description"));
         List<CommandHandler> commandHandlers = List.of(commandHandler);
 
         Bot bot = new Bot(telegramBot, commandHandlers, updateProcessor);
-        bot.start();
 
         ArgumentCaptor<SetMyCommands> captor = ArgumentCaptor.forClass(SetMyCommands.class);
         verify(telegramBot).execute(captor.capture());
@@ -65,7 +65,7 @@ class BotTest {
     void process_ResponseWithSendMessage() {
         when(updateProcessor.process(any(Update.class))).thenReturn(new SendMessage(1L, "message"));
 
-        Bot bot = new Bot(telegramBot, List.of(), updateProcessor);
+        Bot bot = new Bot(telegramBot, commandHandlers, updateProcessor);
         Update updateMock = mock(Update.class);
         Message message = mock(Message.class);
         when(updateMock.message()).thenReturn(message);

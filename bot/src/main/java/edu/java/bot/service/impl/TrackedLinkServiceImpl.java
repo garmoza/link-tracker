@@ -5,14 +5,14 @@ import edu.java.bot.entity.User;
 import edu.java.bot.service.TrackedLinkService;
 import edu.java.bot.source.TrackableLink;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class TrackedLinkServiceImpl implements TrackedLinkService {
 
     private final List<TrackableLink> trackableLinks;
-
-    public TrackedLinkServiceImpl(List<TrackableLink> trackableLinks) {
-        this.trackableLinks = trackableLinks;
-    }
 
     @Override
     public boolean isTrackableLink(Link link) {

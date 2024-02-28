@@ -4,14 +4,19 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.service.UserService;
 import edu.java.bot.util.SendMessageFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StartCommand implements CommandHandler {
 
     private final UserService userService;
     private final List<CommandHandler> commandHandlers;
 
-    public StartCommand(UserService userService, List<CommandHandler> commandHandlers) {
+    public StartCommand(UserService userService, @Lazy List<CommandHandler> commandHandlers) {
         this.userService = userService;
         this.commandHandlers = commandHandlers;
     }
@@ -40,7 +45,14 @@ public class StartCommand implements CommandHandler {
             Hello, *%s*!
             You are successfully registered. Pls, use commands:
             """, name);
-        formatter.appendHandlerList(commandHandlers);
+        formatter.appendHandlerList(getAllCommandHandlers());
         return formatter.getMessage();
+    }
+
+    private List<CommandHandler> getAllCommandHandlers() {
+        List<CommandHandler> allCommands = new ArrayList<>(commandHandlers);
+        allCommands.add(this);
+        allCommands.sort(Comparator.comparing(CommandHandler::command));
+        return allCommands;
     }
 }
