@@ -5,6 +5,7 @@ import edu.java.bot.service.UpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,7 @@ public class UpdateController {
     private final UpdateService updateService;
 
     @PostMapping
-    public ResponseEntity<Void> sendUpdates(LinkUpdate dto) {
-        return updateService.sendUpdates(dto);
+    public ResponseEntity<Void> sendUpdate(@RequestBody LinkUpdate dto) {
+        return updateService.sendUpdate(dto);
     }
 }

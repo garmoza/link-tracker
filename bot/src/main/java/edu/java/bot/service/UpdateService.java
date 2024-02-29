@@ -5,5 +5,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface UpdateService {
 
-    ResponseEntity<Void> sendUpdates(LinkUpdate dto);
+    ResponseEntity<Void> sendUpdate(LinkUpdate dto);
 }

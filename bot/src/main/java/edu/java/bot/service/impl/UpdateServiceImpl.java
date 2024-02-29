@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class UpdateServiceImpl implements UpdateService {
 
     @Override
-    public ResponseEntity<Void> sendUpdates(LinkUpdate dto) {
+    public ResponseEntity<Void> sendUpdate(LinkUpdate dto) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 }
