@@ -6,6 +6,7 @@ app:
   client:
     github-api-url: "https://api.github.com"
     stackoverflow-api-url: "https://api.stackexchange.com/2.3"
+    bot-api-url: "https:://localhost:8090"
 
 spring:
   application:
