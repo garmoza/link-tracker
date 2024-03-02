@@ -1,6 +1,6 @@
 package edu.java.scrapper.client;
 
-import edu.java.scrapper.dto.github.RepositoryResponse;
+import edu.java.scrapper.dto.response.github.RepositoryResponse;
 import reactor.core.publisher.Mono;
 
 public interface GitHubClient {

@@ -1,7 +1,7 @@
 package edu.java.scrapper.client.impl;
 
 import edu.java.scrapper.client.GitHubClient;
-import edu.java.scrapper.dto.github.RepositoryResponse;
+import edu.java.scrapper.dto.response.github.RepositoryResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;

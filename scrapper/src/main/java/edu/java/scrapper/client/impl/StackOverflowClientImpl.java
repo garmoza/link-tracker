@@ -1,7 +1,7 @@
 package edu.java.scrapper.client.impl;
 
 import edu.java.scrapper.client.StackOverflowClient;
-import edu.java.scrapper.dto.stackoverflow.QuestionResponse;
+import edu.java.scrapper.dto.response.stackoverflow.QuestionResponse;
 import reactor.core.publisher.Mono;
 
 public class StackOverflowClientImpl extends AbstractWebClient implements StackOverflowClient {

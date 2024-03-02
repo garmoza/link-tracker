@@ -1,7 +1,7 @@
 package edu.java.scrapper.dto.response;
 
-import lombok.Builder;
 import java.util.List;
+import lombok.Builder;
 
 @Builder
 public record ApiErrorResponse(
