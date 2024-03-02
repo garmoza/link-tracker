@@ -8,10 +8,6 @@ import reactor.core.publisher.Mono;
 
 public class GitHubClientImpl extends AbstractWebClient implements GitHubClient {
 
-    public GitHubClientImpl() {
-        super("https://api.github.com");
-    }
-
     public GitHubClientImpl(String baseUrl) {
         super(baseUrl);
     }

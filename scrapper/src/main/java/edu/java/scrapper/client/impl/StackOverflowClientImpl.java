@@ -6,10 +6,6 @@ import reactor.core.publisher.Mono;
 
 public class StackOverflowClientImpl extends AbstractWebClient implements StackOverflowClient {
 
-    public StackOverflowClientImpl() {
-        super("https://api.stackexchange.com/2.3");
-    }
-
     public StackOverflowClientImpl(String baseUrl) {
         super(baseUrl);
     }
