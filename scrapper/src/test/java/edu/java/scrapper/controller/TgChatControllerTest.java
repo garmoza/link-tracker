@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.when;
@@ -41,8 +40,7 @@ class TgChatControllerTest {
 
     @Test
     void registerChat_Validation_NegativeId() throws Exception {
-        ResultActions response = mockMvc.perform(post("/tg-chat/-2"))
-            .andDo(MockMvcResultHandlers.print());
+        ResultActions response = mockMvc.perform(post("/tg-chat/-2"));
 
         response.andExpect(status().isBadRequest())
             .andExpect(result -> assertInstanceOf(
@@ -53,8 +51,7 @@ class TgChatControllerTest {
 
     @Test
     void registerChat_Validation_NotLongId() throws Exception {
-        ResultActions response = mockMvc.perform(post("/tg-chat/not-long"))
-            .andDo(MockMvcResultHandlers.print());
+        ResultActions response = mockMvc.perform(post("/tg-chat/not-long"));
 
         response.andExpect(status().isBadRequest())
             .andExpect(result -> assertInstanceOf(
@@ -70,5 +67,27 @@ class TgChatControllerTest {
         ResultActions response = mockMvc.perform(delete("/tg-chat/1"));
 
         response.andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteChat_Validation_NegativeId() throws Exception {
+        ResultActions response = mockMvc.perform(delete("/tg-chat/-2"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                ConstraintViolationException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void deleteChat_Validation_NotLongId() throws Exception {
+        ResultActions response = mockMvc.perform(delete("/tg-chat/not-long"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MethodArgumentTypeMismatchException.class,
+                result.getResolvedException()
+            ));
     }
 }

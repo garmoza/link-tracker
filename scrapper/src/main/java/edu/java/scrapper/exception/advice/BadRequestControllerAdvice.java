@@ -44,6 +44,9 @@ public class BadRequestControllerAdvice {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handles the exception that is thrown when validating values with Bean-validation.
+     */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
         Map<String, String> violations = new HashMap<>();
@@ -67,6 +70,9 @@ public class BadRequestControllerAdvice {
         return description.toString();
     }
 
+    /**
+     * Handles the exception that is thrown when validating request DTO using @Valid annotation.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, String> violations = new HashMap<>();

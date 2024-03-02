@@ -6,6 +6,7 @@ import edu.java.scrapper.dto.request.RemoveLinkRequest;
 import edu.java.scrapper.dto.response.LinkResponse;
 import edu.java.scrapper.dto.response.ListLinksResponse;
 import edu.java.scrapper.service.LinkService;
+import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -76,7 +81,37 @@ class LinkControllerTest {
         ResultActions response = mockMvc.perform(get("/links")
             .accept(MediaType.APPLICATION_JSON));
 
-        response.andExpect(status().isBadRequest());
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MissingRequestHeaderException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void getAllLinks_HeaderTgChatId_NegativeId() throws Exception {
+        ResultActions response = mockMvc.perform(get("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .header("Tg-Chat-Id", "-2"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                ConstraintViolationException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void getAllLinks_HeaderTgChatId_NotLongId() throws Exception {
+        ResultActions response = mockMvc.perform(get("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .header("Tg-Chat-Id", "not-long"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MethodArgumentTypeMismatchException.class,
+                result.getResolvedException()
+            ));
     }
 
     @Test
@@ -109,7 +144,58 @@ class LinkControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(requestBody)));
 
-        response.andExpect(status().isBadRequest());
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MissingRequestHeaderException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void addLink_HeaderTgChatId_NegativeId() throws Exception {
+        var requestBody = new AddLinkRequest("https://example.com");
+        ResultActions response = mockMvc.perform(post("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(requestBody))
+            .header("Tg-Chat-Id", "-2"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                ConstraintViolationException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void addLink_HeaderTgChatId_NotLongId() throws Exception {
+        var requestBody = new AddLinkRequest("https://example.com");
+        ResultActions response = mockMvc.perform(post("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(requestBody))
+            .header("Tg-Chat-Id", "not-long"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MethodArgumentTypeMismatchException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void addLink_Validation_Body() throws Exception {
+        ResultActions response = mockMvc.perform(post("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Tg-Chat-Id", "1")
+            .content("{}"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MethodArgumentNotValidException.class,
+                result.getResolvedException()
+            ));
     }
 
     @Test
@@ -142,6 +228,57 @@ class LinkControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(requestBody)));
 
-        response.andExpect(status().isBadRequest());
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MissingRequestHeaderException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void deleteLink_HeaderTgChatId_NegativeId() throws Exception {
+        var requestBody = new RemoveLinkRequest("https://example.com");
+        ResultActions response = mockMvc.perform(delete("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(requestBody))
+            .header("Tg-Chat-Id", "-2"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                ConstraintViolationException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void deleteLink_HeaderTgChatId_NotLongId() throws Exception {
+        var requestBody = new RemoveLinkRequest("https://example.com");
+        ResultActions response = mockMvc.perform(delete("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(requestBody))
+            .header("Tg-Chat-Id", "not-long"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MethodArgumentTypeMismatchException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void deleteLink_Validation_Body() throws Exception {
+        ResultActions response = mockMvc.perform(delete("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Tg-Chat-Id", "1")
+            .content("{}"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MethodArgumentNotValidException.class,
+                result.getResolvedException()
+            ));
     }
 }
