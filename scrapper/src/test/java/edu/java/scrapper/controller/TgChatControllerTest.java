@@ -1,6 +1,7 @@
 package edu.java.scrapper.controller;
 
 import edu.java.scrapper.service.TgChatService;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -11,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,6 +37,30 @@ class TgChatControllerTest {
         ResultActions response = mockMvc.perform(post("/tg-chat/1"));
 
         response.andExpect(status().isOk());
+    }
+
+    @Test
+    void registerChat_Validation_NegativeId() throws Exception {
+        ResultActions response = mockMvc.perform(post("/tg-chat/-2"))
+            .andDo(MockMvcResultHandlers.print());
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                ConstraintViolationException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void registerChat_Validation_NotLongId() throws Exception {
+        ResultActions response = mockMvc.perform(post("/tg-chat/not-long"))
+            .andDo(MockMvcResultHandlers.print());
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MethodArgumentTypeMismatchException.class,
+                result.getResolvedException()
+            ));
     }
 
     @Test

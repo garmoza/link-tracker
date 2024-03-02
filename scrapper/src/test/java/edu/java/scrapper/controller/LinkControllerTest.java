@@ -72,6 +72,14 @@ class LinkControllerTest {
     }
 
     @Test
+    void getAllLinks_HeaderTgChatId_Missing() throws Exception {
+        ResultActions response = mockMvc.perform(get("/links")
+            .accept(MediaType.APPLICATION_JSON));
+
+        response.andExpect(status().isBadRequest());
+    }
+
+    @Test
     void addLink_Ok() throws Exception {
         var responseBody = new LinkResponse(1L, "https://example.com");
         when(linkService.addLink(any(Long.class), any())).thenReturn(ResponseEntity.ok(responseBody));
@@ -94,6 +102,17 @@ class LinkControllerTest {
     }
 
     @Test
+    void addLink_HeaderTgChatId_Missing() throws Exception {
+        var requestBody = new AddLinkRequest("https://example.com");
+        ResultActions response = mockMvc.perform(post("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(requestBody)));
+
+        response.andExpect(status().isBadRequest());
+    }
+
+    @Test
     void deleteLink_Ok() throws Exception {
         var responseBody = new LinkResponse(1L, "https://example.com");
         when(linkService.deleteLink(any(Long.class), any())).thenReturn(ResponseEntity.ok(responseBody));
@@ -113,5 +132,16 @@ class LinkControllerTest {
             """;
         response.andExpect(status().isOk())
             .andExpect(content().json(expected));
+    }
+
+    @Test
+    void deleteLink_HeaderTgChatId_Missing() throws Exception {
+        var requestBody = new RemoveLinkRequest("https://example.com");
+        ResultActions response = mockMvc.perform(delete("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(requestBody)));
+
+        response.andExpect(status().isBadRequest());
     }
 }
