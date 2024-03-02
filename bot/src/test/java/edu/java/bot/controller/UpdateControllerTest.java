@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,5 +44,18 @@ class UpdateControllerTest {
             .content(objectMapper.writeValueAsString(requestBody)));
 
         response.andExpect(status().isOk());
+    }
+
+    @Test
+    void sendUpdates_Validation_Body() throws Exception {
+        ResultActions response = mockMvc.perform(post("/updates")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{}"));
+
+        response.andExpect(status().isBadRequest())
+            .andExpect(result -> assertInstanceOf(
+                MethodArgumentNotValidException.class,
+                result.getResolvedException()
+            ));
     }
 }

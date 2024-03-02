@@ -1,4 +1,4 @@
-package edu.java.scrapper.exception.advice;
+package edu.java.scrapper.controller.advice;
 
 import edu.java.scrapper.dto.response.ApiErrorResponse;
 import jakarta.validation.ConstraintViolationException;
