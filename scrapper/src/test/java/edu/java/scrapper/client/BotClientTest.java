@@ -6,7 +6,6 @@ import edu.java.scrapper.dto.request.LinkUpdate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -20,6 +19,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WireMockTest
@@ -64,8 +64,7 @@ class BotClientTest {
         wireMock.stubFor(post("/updates")
             .willReturn(badRequest()));
 
-        LinkUpdate dto = Mockito.mock(LinkUpdate.class);
-        Mono<Void> result = botClient.sendUpdate(dto);
+        Mono<Void> result = botClient.sendUpdate(mock(LinkUpdate.class));
 
         StepVerifier.create(result)
             .expectError(WebClientResponseException.class)
@@ -77,8 +76,7 @@ class BotClientTest {
         wireMock.stubFor(post("/updates")
             .willReturn(aResponse().withStatus(418)));
 
-        LinkUpdate dto = Mockito.mock(LinkUpdate.class);
-        Mono<Void> result = botClient.sendUpdate(dto);
+        Mono<Void> result = botClient.sendUpdate(mock(LinkUpdate.class));
 
         StepVerifier.create(result)
             .expectError(WebClientResponseException.class)

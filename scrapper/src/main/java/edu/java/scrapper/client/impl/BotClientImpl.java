@@ -7,6 +7,8 @@ import reactor.core.publisher.Mono;
 
 public class BotClientImpl extends AbstractWebClient implements BotClient {
 
+    private static final String UPDATES_ENDPOINT = "/updates";
+
     public BotClientImpl(String baseUrl) {
         super(baseUrl);
     }
@@ -14,7 +16,7 @@ public class BotClientImpl extends AbstractWebClient implements BotClient {
     @Override
     public Mono<Void> sendUpdate(LinkUpdate dto) {
         return webClient.post()
-            .uri("/updates")
+            .uri(UPDATES_ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(dto)
             .retrieve()
