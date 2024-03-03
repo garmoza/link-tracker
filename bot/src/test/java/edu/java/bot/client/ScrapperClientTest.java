@@ -2,10 +2,10 @@ package edu.java.bot.client;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import edu.java.bot.dto.request.AddLinkRequest;
-import edu.java.bot.dto.request.RemoveLinkRequest;
-import edu.java.bot.dto.response.LinkResponse;
-import edu.java.bot.dto.response.ListLinksResponse;
+import edu.java.model.request.AddLinkRequest;
+import edu.java.model.request.RemoveLinkRequest;
+import edu.java.model.response.LinkResponse;
+import edu.java.model.response.ListLinksResponse;
 import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Test;

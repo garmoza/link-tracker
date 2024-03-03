@@ -1,6 +1,6 @@
 package edu.java.bot.controller.advice;
 
-import edu.java.bot.dto.response.ApiErrorResponse;
+import edu.java.model.response.ApiErrorResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

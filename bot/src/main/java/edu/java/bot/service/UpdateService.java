@@ -1,6 +1,6 @@
 package edu.java.bot.service;
 
-import edu.java.bot.dto.request.LinkUpdate;
+import edu.java.model.request.LinkUpdate;
 import org.springframework.http.ResponseEntity;
 
 public interface UpdateService {

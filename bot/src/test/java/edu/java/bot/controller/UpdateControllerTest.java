@@ -1,8 +1,8 @@
 package edu.java.bot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.java.bot.dto.request.LinkUpdate;
 import edu.java.bot.service.UpdateService;
+import edu.java.model.request.LinkUpdate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
