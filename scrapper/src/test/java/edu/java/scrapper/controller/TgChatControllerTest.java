@@ -1,5 +1,6 @@
 package edu.java.scrapper.controller;
 
+import edu.java.scrapper.exception.TgChatNotFoundException;
 import edu.java.scrapper.service.TgChatService;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -87,6 +88,18 @@ class TgChatControllerTest {
         response.andExpect(status().isBadRequest())
             .andExpect(result -> assertInstanceOf(
                 MethodArgumentTypeMismatchException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void deleteChat_NotFound() throws Exception {
+        when(tgChatService.deleteChat(1L)).thenThrow(new TgChatNotFoundException(1L));
+        ResultActions response = mockMvc.perform(delete("/tg-chat/1"));
+
+        response.andExpect(status().isNotFound())
+            .andExpect(result -> assertInstanceOf(
+                TgChatNotFoundException.class,
                 result.getResolvedException()
             ));
     }
