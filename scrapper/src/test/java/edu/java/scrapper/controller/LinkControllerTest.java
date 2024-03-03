@@ -203,7 +203,8 @@ class LinkControllerTest {
 
     @Test
     void addLink_AlreadyExists() throws Exception {
-        when(linkService.addLink(any(Long.class), any())).thenThrow(new LinkAlreadyExistsException());
+        var link = new LinkResponse(2L, URI.create("https://example.com"));
+        when(linkService.addLink(any(Long.class), any())).thenThrow(new LinkAlreadyExistsException(link));
         var requestBody = new AddLinkRequest("https://example.com");
         ResultActions response = mockMvc.perform(post("/links")
             .accept(MediaType.APPLICATION_JSON)
