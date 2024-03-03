@@ -1,7 +1,7 @@
 package edu.java.scrapper.client.impl;
 
+import edu.java.model.request.LinkUpdate;
 import edu.java.scrapper.client.BotClient;
-import edu.java.scrapper.dto.request.LinkUpdate;
 import org.springframework.http.MediaType;
 import reactor.core.publisher.Mono;
 

@@ -1,6 +1,6 @@
 package edu.java.scrapper.controller.advice;
 
-import edu.java.scrapper.dto.response.ApiErrorResponse;
+import edu.java.model.response.ApiErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.HashMap;

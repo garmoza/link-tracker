@@ -1,10 +1,10 @@
 package edu.java.scrapper.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.java.scrapper.dto.request.AddLinkRequest;
-import edu.java.scrapper.dto.request.RemoveLinkRequest;
-import edu.java.scrapper.dto.response.LinkResponse;
-import edu.java.scrapper.dto.response.ListLinksResponse;
+import edu.java.model.request.AddLinkRequest;
+import edu.java.model.request.RemoveLinkRequest;
+import edu.java.model.response.LinkResponse;
+import edu.java.model.response.ListLinksResponse;
 import edu.java.scrapper.service.LinkService;
 import jakarta.validation.ConstraintViolationException;
 import java.net.URI;
