@@ -1,5 +1,6 @@
 package edu.java.scrapper.controller;
 
+import edu.java.scrapper.exception.TgChatAlreadyExistsException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
 import edu.java.scrapper.service.TgChatService;
 import jakarta.validation.ConstraintViolationException;
@@ -57,6 +58,18 @@ class TgChatControllerTest {
         response.andExpect(status().isBadRequest())
             .andExpect(result -> assertInstanceOf(
                 MethodArgumentTypeMismatchException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
+    void registerChat_AlreadyExists() throws Exception {
+        when(tgChatService.registerChat(1L)).thenThrow(new TgChatAlreadyExistsException());
+        ResultActions response = mockMvc.perform(post("/tg-chat/1"));
+
+        response.andExpect(status().isAlreadyReported())
+            .andExpect(result -> assertInstanceOf(
+                TgChatAlreadyExistsException.class,
                 result.getResolvedException()
             ));
     }

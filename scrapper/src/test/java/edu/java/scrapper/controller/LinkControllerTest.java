@@ -5,6 +5,7 @@ import edu.java.model.request.AddLinkRequest;
 import edu.java.model.request.RemoveLinkRequest;
 import edu.java.model.response.LinkResponse;
 import edu.java.model.response.ListLinksResponse;
+import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.service.LinkService;
 import jakarta.validation.ConstraintViolationException;
@@ -201,6 +202,23 @@ class LinkControllerTest {
     }
 
     @Test
+    void addLink_AlreadyExists() throws Exception {
+        when(linkService.addLink(any(Long.class), any())).thenThrow(new LinkAlreadyExistsException());
+        var requestBody = new AddLinkRequest("https://example.com");
+        ResultActions response = mockMvc.perform(post("/links")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(requestBody))
+            .header("Tg-Chat-Id", "1"));
+
+        response.andExpect(status().isAlreadyReported())
+            .andExpect(result -> assertInstanceOf(
+                LinkAlreadyExistsException.class,
+                result.getResolvedException()
+            ));
+    }
+
+    @Test
     void deleteLink_Ok() throws Exception {
         var responseBody = new LinkResponse(1L, URI.create("https://example.com"));
         when(linkService.deleteLink(any(Long.class), any())).thenReturn(ResponseEntity.ok(responseBody));
@@ -286,7 +304,10 @@ class LinkControllerTest {
 
     @Test
     void deleteLink_NotFound() throws Exception {
-        when(linkService.deleteLink(any(Long.class), any())).thenThrow(new LinkNotFoundException("https://example.com"));
+        when(linkService.deleteLink(
+            any(Long.class),
+            any()
+        )).thenThrow(new LinkNotFoundException("https://example.com"));
         var requestBody = new RemoveLinkRequest("https://example.com");
         ResultActions response = mockMvc.perform(delete("/links")
             .accept(MediaType.APPLICATION_JSON)
