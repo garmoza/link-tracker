@@ -7,6 +7,7 @@ import edu.java.scrapper.dto.response.LinkResponse;
 import edu.java.scrapper.dto.response.ListLinksResponse;
 import edu.java.scrapper.service.LinkService;
 import jakarta.validation.ConstraintViolationException;
+import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,8 +47,8 @@ class LinkControllerTest {
     void getAllLinks_Ok() throws Exception {
         var responseBody = ListLinksResponse.builder()
             .links(List.of(
-                new LinkResponse(1L, "https://example1.com"),
-                new LinkResponse(2L, "https://example2.com")
+                new LinkResponse(1L, URI.create("https://example1.com")),
+                new LinkResponse(2L, URI.create("https://example2.com"))
             ))
             .size(2)
             .build();
@@ -116,7 +117,7 @@ class LinkControllerTest {
 
     @Test
     void addLink_Ok() throws Exception {
-        var responseBody = new LinkResponse(1L, "https://example.com");
+        var responseBody = new LinkResponse(1L, URI.create("https://example.com"));
         when(linkService.addLink(any(Long.class), any())).thenReturn(ResponseEntity.ok(responseBody));
 
         var requestBody = new AddLinkRequest("https://example.com");
@@ -200,7 +201,7 @@ class LinkControllerTest {
 
     @Test
     void deleteLink_Ok() throws Exception {
-        var responseBody = new LinkResponse(1L, "https://example.com");
+        var responseBody = new LinkResponse(1L, URI.create("https://example.com"));
         when(linkService.deleteLink(any(Long.class), any())).thenReturn(ResponseEntity.ok(responseBody));
 
         var requestBody = new RemoveLinkRequest("https://example.com");

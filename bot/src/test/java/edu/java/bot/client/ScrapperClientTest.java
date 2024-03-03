@@ -6,6 +6,7 @@ import edu.java.bot.dto.request.AddLinkRequest;
 import edu.java.bot.dto.request.RemoveLinkRequest;
 import edu.java.bot.dto.response.LinkResponse;
 import edu.java.bot.dto.response.ListLinksResponse;
+import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -143,8 +144,8 @@ class ScrapperClientTest {
 
         ListLinksResponse expected = ListLinksResponse.builder()
             .links(List.of(
-                new LinkResponse(1L, "https://example1.com"),
-                new LinkResponse(2L, "https://example2.com")
+                new LinkResponse(1L, URI.create("https://example1.com")),
+                new LinkResponse(2L, URI.create("https://example2.com"))
             ))
             .size(2)
             .build();
@@ -198,7 +199,7 @@ class ScrapperClientTest {
         AddLinkRequest dto = new AddLinkRequest("https://example.com");
         LinkResponse actual = scrapperClient.addLink(1L, dto).block();
 
-        LinkResponse expected = new LinkResponse(2L, "https://example.com");
+        LinkResponse expected = new LinkResponse(2L, URI.create("https://example.com"));
         assertEquals(expected, actual);
     }
 
@@ -249,7 +250,7 @@ class ScrapperClientTest {
         RemoveLinkRequest dto = new RemoveLinkRequest("https://example.com");
         LinkResponse actual = scrapperClient.deleteLink(1L, dto).block();
 
-        LinkResponse expected = new LinkResponse(2L, "https://example.com");
+        LinkResponse expected = new LinkResponse(2L, URI.create("https://example.com"));
         assertEquals(expected, actual);
     }
 
