@@ -13,6 +13,13 @@
     <version>${revision}</version>
 
     <dependencies>
+        <!-- Modules -->
+        <dependency>
+            <groupId>edu.java</groupId>
+            <artifactId>model</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <!-- Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -59,6 +66,16 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Docs -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
         </dependency>
 
         <!-- Tests -->
@@ -150,6 +167,44 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.3.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/scrapper-api.json</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>edu.java.scrapper.api</apiPackage>
+                            <modelPackage>edu.java.scrapper.model</modelPackage>
+
+                            <languageSpecificPrimitives>
+                                LinkUpdate,
+                                ApiErrorResponse
+                            </languageSpecificPrimitives>
+                            <schemaMappings>
+                                AddLinkRequest=edu.java.model.request.AddLinkRequest,
+                                RemoveLinkRequest=edu.java.model.request.RemoveLinkRequest,
+
+                                LinkResponse=edu.java.model.response.LinkResponse,
+                                ApiErrorResponse=edu.java.model.response.ApiErrorResponse,
+                                ListLinksResponse=edu.java.model.response.ListLinksResponse
+                            </schemaMappings>
+
+                            <configOptions>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
