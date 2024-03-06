@@ -1,12 +1,12 @@
 package edu.java.scrapper.controller.advice;
 
 import edu.java.model.response.ApiErrorResponse;
+import edu.java.model.util.ApiErrorResponses;
+import edu.java.model.util.ConstraintViolationFormatter;
 import jakarta.validation.ConstraintViolationException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,30 +18,20 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class BadRequestControllerAdvice {
 
+    private static final int BAD_REQUEST_CODE = 400;
+
     @ExceptionHandler(MissingRequestHeaderException.class)
     public ResponseEntity<ApiErrorResponse> handleMissingRequestHeaderException(MissingRequestHeaderException e) {
-        var body = buildResponse(e, "Header '" + e.getHeaderName() + "' is missing");
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
-
-    private ApiErrorResponse buildResponse(Exception e, String description) {
-        return ApiErrorResponse.builder()
-            .description(description)
-            .code(HttpStatus.BAD_REQUEST.toString())
-            .exceptionName(e.getClass().getName())
-            .exceptionMessage(e.getMessage())
-            .stacktrace(Arrays.stream(e.getStackTrace())
-                .map(StackTraceElement::toString)
-                .toList())
-            .build();
+        var body = ApiErrorResponses.of(e, BAD_REQUEST_CODE, "Header '" + e.getHeaderName() + "' is missing");
+        return ResponseEntity.badRequest().body(body);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiErrorResponse> handleMethodArgumentTypeMismatchException(
         MethodArgumentTypeMismatchException e
     ) {
-        var body = buildResponse(e, "Parameter '" + e.getPropertyName() + "' is not valid");
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        var body = ApiErrorResponses.of(e, BAD_REQUEST_CODE, "Parameter '" + e.getPropertyName() + "' is not valid");
+        return ResponseEntity.badRequest().body(body);
     }
 
     /**
@@ -54,20 +44,10 @@ public class BadRequestControllerAdvice {
             PathImpl path = (PathImpl) violation.getPropertyPath();
             violations.put(path.getLeafNode().getName(), violation.getMessage());
         }
+        String description = ConstraintViolationFormatter.getDescription(violations);
 
-        var body = buildResponse(e, getDescription(violations));
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
-
-    private String getDescription(Map<String, String> violations) {
-        StringBuilder description = new StringBuilder("Constraint violation\n");
-        for (var entry : violations.entrySet()) {
-            description.append(entry.getKey());
-            description.append(" - ");
-            description.append(entry.getValue());
-            description.append('\n');
-        }
-        return description.toString();
+        var body = ApiErrorResponses.of(e, BAD_REQUEST_CODE, description);
+        return ResponseEntity.badRequest().body(body);
     }
 
     /**
@@ -79,8 +59,9 @@ public class BadRequestControllerAdvice {
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
             violations.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
+        String description = ConstraintViolationFormatter.getDescription(violations);
 
-        var body = buildResponse(e, getDescription(violations));
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        var body = ApiErrorResponses.of(e, BAD_REQUEST_CODE, description);
+        return ResponseEntity.badRequest().body(body);
     }
 }
