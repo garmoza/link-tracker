@@ -1,14 +1,14 @@
 --liquibase formatted sql
 
 --changeset garmoza:1
-create table tg_chat(
+CREATE TABLE IF NOT EXISTS tg_chat(
     id bigint,
 
-    primary key (id)
+    PRIMARY KEY (id)
 );
 
 --changeset garmoza:2
-create table trackable_link(
+CREATE TABLE IF NOT EXISTS trackable_link(
     url text,
     last_change timestamp with time zone not null,
 
@@ -16,12 +16,12 @@ create table trackable_link(
 );
 
 --changeset garmoza:3
-create table subscribe(
+CREATE TABLE IF NOT EXISTS subscribe(
     tg_chat_id bigint,
     trackable_link_url text,
     last_update timestamp with time zone not null,
 
-    primary key (tg_chat_id, trackable_link_url),
-    foreign key (tg_chat_id) references tg_chat(id),
-    foreign key (trackable_link_url) references trackable_link(url)
+    PRIMARY KEY (tg_chat_id, trackable_link_url),
+    FOREIGN KEY (tg_chat_id) REFERENCES tg_chat(id),
+    FOREIGN KEY (trackable_link_url) REFERENCES trackable_link(url)
 );
