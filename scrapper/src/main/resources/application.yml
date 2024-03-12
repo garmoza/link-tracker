@@ -11,6 +11,12 @@ app:
 spring:
   application:
     name: scrapper
+  datasource:
+    url: jdbc:postgresql://postgresql:5432/scrapper
+    username: postgres
+    password: postgres
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 server:
   port: 8080
