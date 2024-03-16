@@ -13,17 +13,17 @@ import org.springframework.stereotype.Service;
 public class LinkServiceImpl implements LinkService {
 
     @Override
-    public ResponseEntity<ListLinksResponse> getAllLinks(long tgChatId) {
+    public ResponseEntity<ListLinksResponse> getAllLinksByChatId(long tgChatId) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @Override
-    public ResponseEntity<LinkResponse> addLink(long tgChatId, AddLinkRequest dto) {
+    public ResponseEntity<LinkResponse> subscribeLink(long tgChatId, AddLinkRequest dto) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @Override
-    public ResponseEntity<LinkResponse> deleteLink(long tgChatId, RemoveLinkRequest dto) {
+    public ResponseEntity<LinkResponse> unsubscribeLink(long tgChatId, RemoveLinkRequest dto) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 }

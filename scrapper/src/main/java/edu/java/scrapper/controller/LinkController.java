@@ -18,12 +18,12 @@ public class LinkController implements LinkControllerApi {
 
     @Override
     public ResponseEntity<ListLinksResponse> getAllLinks(Long tgChatId) {
-        return linkService.getAllLinks(tgChatId);
+        return linkService.getAllLinksByChatId(tgChatId);
     }
 
     @Override
     public ResponseEntity<LinkResponse> addLink(Long tgChatId, AddLinkRequest dto) {
-        return linkService.addLink(tgChatId, dto);
+        return linkService.subscribeLink(tgChatId, dto);
     }
 
     @Override
@@ -31,6 +31,6 @@ public class LinkController implements LinkControllerApi {
         Long tgChatId,
         RemoveLinkRequest dto
     ) {
-        return linkService.deleteLink(tgChatId, dto);
+        return linkService.unsubscribeLink(tgChatId, dto);
     }
 }

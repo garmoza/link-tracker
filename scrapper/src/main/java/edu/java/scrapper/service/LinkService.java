@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface LinkService {
 
-    ResponseEntity<ListLinksResponse> getAllLinks(long tgChatId);
+    ResponseEntity<ListLinksResponse> getAllLinksByChatId(long tgChatId);
 
-    ResponseEntity<LinkResponse> addLink(long tgChatId, AddLinkRequest dto);
+    ResponseEntity<LinkResponse> subscribeLink(long tgChatId, AddLinkRequest dto);
 
-    ResponseEntity<LinkResponse> deleteLink(long tgChatId, RemoveLinkRequest dto);
+    ResponseEntity<LinkResponse> unsubscribeLink(long tgChatId, RemoveLinkRequest dto);
 }
