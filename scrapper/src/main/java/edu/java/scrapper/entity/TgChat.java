@@ -13,4 +13,23 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TgChat {
     private long id;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TgChat chat = (TgChat) o;
+
+        return id == chat.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
 }

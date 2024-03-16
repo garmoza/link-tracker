@@ -1,9 +1,11 @@
 package edu.java.scrapper.controller;
 
+import edu.java.model.response.TgChatResponse;
 import edu.java.scrapper.exception.TgChatAlreadyExistsException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
 import edu.java.scrapper.service.TgChatService;
 import jakarta.validation.ConstraintViolationException;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -18,7 +21,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest({TgChatController.class})
@@ -72,6 +77,27 @@ class TgChatControllerTest {
                 TgChatAlreadyExistsException.class,
                 result.getResolvedException()
             ));
+    }
+
+    @Test
+    void getAllChats_Ok() throws Exception {
+        var responseBody = List.of(
+            new TgChatResponse(1L),
+            new TgChatResponse(2L)
+        );
+        when(tgChatService.getAllChats()).thenReturn(ResponseEntity.ok(responseBody));
+
+        ResultActions response = mockMvc.perform(get("/tg-chat")
+            .accept(MediaType.APPLICATION_JSON));
+
+        String expected = """
+            [
+                {"id": 1},
+                {"id": 2}
+            ]
+            """;
+        response.andExpect(status().isOk())
+            .andExpect(content().json(expected));
     }
 
     @Test
