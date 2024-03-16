@@ -191,7 +191,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/scrapper-api.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/scrapper-api.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>edu.java.scrapper.api</apiPackage>
                             <modelPackage>edu.java.scrapper.model</modelPackage>
@@ -201,12 +201,17 @@
                                 ApiErrorResponse
                             </languageSpecificPrimitives>
                             <schemaMappings>
+                                <!-- Requests -->
                                 AddLinkRequest=edu.java.model.request.AddLinkRequest,
                                 RemoveLinkRequest=edu.java.model.request.RemoveLinkRequest,
 
+                                <!-- Responses -->
                                 LinkResponse=edu.java.model.response.LinkResponse,
-                                ApiErrorResponse=edu.java.model.response.ApiErrorResponse,
-                                ListLinksResponse=edu.java.model.response.ListLinksResponse
+                                ListLinksResponse=edu.java.model.response.ListLinksResponse,
+
+                                TgChatResponse=edu.java.model.response.TgChatResponse,
+
+                                ApiErrorResponse=edu.java.model.response.ApiErrorResponse
                             </schemaMappings>
 
                             <configOptions>

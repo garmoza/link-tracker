@@ -1,6 +1,7 @@
 package edu.java.scrapper.repository;
 
 import edu.java.scrapper.entity.TgChat;
+import java.util.List;
 import java.util.Optional;
 
 public interface TgChatRepository {
@@ -11,7 +12,7 @@ public interface TgChatRepository {
 
     boolean existsById(long id);
 
-    Iterable<TgChat> findAll();
+    List<TgChat> findAll();
 
     void remove(long id);
 }

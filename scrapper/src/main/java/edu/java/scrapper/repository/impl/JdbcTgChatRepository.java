@@ -3,6 +3,7 @@ package edu.java.scrapper.repository.impl;
 import edu.java.scrapper.entity.TgChat;
 import edu.java.scrapper.repository.TgChatRepository;
 import edu.java.scrapper.repository.impl.mapper.TgChatRowMapper;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -38,7 +39,7 @@ public class JdbcTgChatRepository implements TgChatRepository {
     }
 
     @Override
-    public Iterable<TgChat> findAll() {
+    public List<TgChat> findAll() {
         return jdbcTemplate.query("SELECT * FROM tg_chat", tgChatRowMapper);
     }
 
