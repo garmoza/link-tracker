@@ -2,11 +2,11 @@ package edu.java.scrapper.repository.impl;
 
 import edu.java.scrapper.entity.TgChat;
 import edu.java.scrapper.repository.TgChatRepository;
-import edu.java.scrapper.repository.impl.mapper.TgChatRowMapper;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 public class JdbcTgChatRepository implements TgChatRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final TgChatRowMapper tgChatRowMapper;
 
     @Override
     public TgChat add(TgChat chat) {
@@ -26,7 +25,11 @@ public class JdbcTgChatRepository implements TgChatRepository {
     @Override
     public Optional<TgChat> findById(long id) {
         try {
-            TgChat chat = jdbcTemplate.queryForObject("SELECT * FROM tg_chat WHERE id=?", tgChatRowMapper, id);
+            TgChat chat = jdbcTemplate.queryForObject(
+                "SELECT * FROM tg_chat WHERE id=?",
+                new BeanPropertyRowMapper<>(TgChat.class),
+                id
+            );
             return Optional.ofNullable(chat);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -40,7 +43,7 @@ public class JdbcTgChatRepository implements TgChatRepository {
 
     @Override
     public List<TgChat> findAll() {
-        return jdbcTemplate.query("SELECT * FROM tg_chat", tgChatRowMapper);
+        return jdbcTemplate.query("SELECT * FROM tg_chat", new BeanPropertyRowMapper<>(TgChat.class));
     }
 
     @Override
