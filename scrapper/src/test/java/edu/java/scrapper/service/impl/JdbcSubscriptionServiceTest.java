@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SubscriptionServiceImplTest {
+class JdbcSubscriptionServiceTest {
 
     @Mock
     private SubscriptionRepository subscriptionRepository;
@@ -38,7 +38,7 @@ class SubscriptionServiceImplTest {
     @Mock
     private TrackableLinkRepository trackableLinkRepository;
     @InjectMocks
-    private SubscriptionServiceImpl subscriptionService;
+    private JdbcSubscriptionService subscriptionService;
 
     @Test
     void getAllLinksByChatId() {

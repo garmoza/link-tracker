@@ -42,6 +42,30 @@ class TrackableLinkRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
+    void update() {
+        trackableLinkRepository.add(TrackableLink.builder()
+            .url("https://example.com")
+            .lastChange(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .lastCrawl(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .build());
+
+        var actual = trackableLinkRepository.update(TrackableLink.builder()
+            .url("https://example.com")
+            .lastChange(OffsetDateTime.parse("2024-03-18T21:00:00Z"))
+            .lastCrawl(OffsetDateTime.parse("2024-03-19T21:00:00Z"))
+            .build());
+
+        var expected = TrackableLink.builder()
+            .url("https://example.com")
+            .lastChange(OffsetDateTime.parse("2024-03-18T21:00:00Z"))
+            .lastCrawl(OffsetDateTime.parse("2024-03-19T21:00:00Z"))
+            .build();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
     void findByUrl_Found() {
         trackableLinkRepository.add(testTrackableLink("https://example.com"));
 
@@ -106,5 +130,33 @@ class TrackableLinkRepositoryTest extends IntegrationTest {
 
         boolean isDeleted = !trackableLinkRepository.existsByUrl("https://example.com");
         assertThat(isDeleted).as("checks that TrackableLink has been deleted").isTrue();
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void findAllByLastCrawlOlder() {
+        trackableLinkRepository.add(TrackableLink.builder()
+            .url("https://example1.com")
+            .lastChange(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .lastCrawl(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .build()
+        );
+        trackableLinkRepository.add(TrackableLink.builder()
+            .url("https://example2.com")
+            .lastChange(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .lastCrawl(OffsetDateTime.parse("2024-03-17T14:00:00Z"))
+            .build()
+        );
+
+        List<TrackableLink> actual = trackableLinkRepository.findAllByLastCrawlOlder(
+            OffsetDateTime.parse("2024-03-17T13:00:00Z"));
+
+        List<TrackableLink> expected = List.of(TrackableLink.builder()
+            .url("https://example1.com")
+            .lastChange(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .lastCrawl(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .build());
+        assertEquals(expected, actual);
     }
 }

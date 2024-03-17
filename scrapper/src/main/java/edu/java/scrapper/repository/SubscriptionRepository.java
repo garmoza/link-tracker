@@ -12,6 +12,8 @@ public interface SubscriptionRepository {
 
     Subscription unsubscribe(Subscription subscription);
 
+    Subscription update(Subscription subscription);
+
     Optional<Subscription> findByTgChatAndTrackableLink(TgChat chat, TrackableLink link);
 
     boolean existsByTgChatAndTrackableLink(TgChat chat, TrackableLink link);

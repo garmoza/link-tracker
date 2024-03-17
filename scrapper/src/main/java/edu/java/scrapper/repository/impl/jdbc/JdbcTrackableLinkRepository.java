@@ -2,6 +2,7 @@ package edu.java.scrapper.repository.impl.jdbc;
 
 import edu.java.scrapper.entity.TrackableLink;
 import edu.java.scrapper.repository.TrackableLinkRepository;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,17 @@ public class JdbcTrackableLinkRepository implements TrackableLinkRepository {
     }
 
     @Override
+    public TrackableLink update(TrackableLink link) {
+        return jdbcTemplate.queryForObject(
+            "UPDATE trackable_link SET last_change=?, last_crawl=? WHERE url=? RETURNING *",
+            new BeanPropertyRowMapper<>(TrackableLink.class),
+            link.getLastChange(),
+            link.getLastCrawl(),
+            link.getUrl()
+        );
+    }
+
+    @Override
     public Optional<TrackableLink> findByUrl(String url) {
         try {
             TrackableLink link = jdbcTemplate.queryForObject(
@@ -49,6 +61,15 @@ public class JdbcTrackableLinkRepository implements TrackableLinkRepository {
     @Override
     public List<TrackableLink> findAll() {
         return jdbcTemplate.query("SELECT * FROM trackable_link", new BeanPropertyRowMapper<>(TrackableLink.class));
+    }
+
+    @Override
+    public List<TrackableLink> findAllByLastCrawlOlder(OffsetDateTime time) {
+        return jdbcTemplate.query(
+            "SELECT * FROM trackable_link WHERE last_crawl < ?",
+            new BeanPropertyRowMapper<>(TrackableLink.class),
+            time
+        );
     }
 
     @Override

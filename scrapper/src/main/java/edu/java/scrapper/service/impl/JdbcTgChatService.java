@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TgChatServiceImpl implements TgChatService {
+public class JdbcTgChatService implements TgChatService {
 
     private final TgChatRepository tgChatRepository;
 

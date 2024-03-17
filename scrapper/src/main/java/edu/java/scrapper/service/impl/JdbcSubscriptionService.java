@@ -20,10 +20,11 @@ import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class SubscriptionServiceImpl implements SubscriptionService {
+public class JdbcSubscriptionService implements SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
     private final TgChatRepository tgChatRepository;
@@ -36,8 +37,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return ResponseEntity.ok(body);
     }
 
-    // Transactional
     @Override
+    @Transactional
     public ResponseEntity<LinkResponse> subscribeLink(long tgChatId, AddLinkRequest dto) {
         TgChat chat = tgChatRepository.findById(tgChatId)
             .orElseThrow(() -> new TgChatNotFoundException(tgChatId));

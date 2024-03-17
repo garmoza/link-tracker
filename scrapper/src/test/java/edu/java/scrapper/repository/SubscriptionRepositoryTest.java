@@ -80,6 +80,29 @@ class SubscriptionRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
+    void update() {
+        subscriptionRepository.subscribe(Subscription.builder()
+            .chatId(1L)
+            .linkUrl("https://example.com")
+            .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .build());
+
+        var actual = subscriptionRepository.update(Subscription.builder()
+            .chatId(1L)
+            .linkUrl("https://example.com")
+            .lastUpdate(OffsetDateTime.parse("2024-04-18T15:00:00Z"))
+            .build());
+        var expected = Subscription.builder()
+            .chatId(1L)
+            .linkUrl("https://example.com")
+            .lastUpdate(OffsetDateTime.parse("2024-04-18T15:00:00Z"))
+            .build();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
     void findByTgChatAndTrackableLink_Found() {
         subscriptionRepository.subscribe(testSubscription(1L, "https://example.com"));
 

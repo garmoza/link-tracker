@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record LinkUpdate(
-    long id,
     @NotBlank
     String url,
     @NotNull

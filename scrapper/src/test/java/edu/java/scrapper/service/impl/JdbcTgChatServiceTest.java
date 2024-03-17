@@ -20,12 +20,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TgChatServiceImplTest {
+class JdbcTgChatServiceTest {
 
     @Mock
     private TgChatRepository tgChatRepository;
     @InjectMocks
-    private TgChatServiceImpl tgChatService;
+    private JdbcTgChatService tgChatService;
 
     @Test
     void registerChat_NewChat() {

@@ -50,6 +50,17 @@ public class JdbcSubscriptionRepository implements SubscriptionRepository {
     }
 
     @Override
+    public Subscription update(Subscription subscription) {
+        return jdbcTemplate.queryForObject(
+            "UPDATE subscribe SET last_update=? WHERE tg_chat_id=? AND trackable_link_url=? RETURNING *",
+            this::rowMapper,
+            subscription.getLastUpdate(),
+            subscription.getChatId(),
+            subscription.getLinkUrl()
+        );
+    }
+
+    @Override
     public Optional<Subscription> findByTgChatAndTrackableLink(TgChat chat, TrackableLink link) {
         try {
             Subscription subscription = jdbcTemplate.queryForObject(
