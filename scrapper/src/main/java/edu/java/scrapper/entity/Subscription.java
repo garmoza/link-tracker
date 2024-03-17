@@ -13,10 +13,10 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrackableLink {
-    private String url;
-    private OffsetDateTime lastChange;
-    private OffsetDateTime lastCrawl;
+public class Subscription {
+    private long chatId;
+    private String linkUrl;
+    private OffsetDateTime lastUpdate;
 
     @Override public boolean equals(Object o) {
         if (this == o) {
@@ -26,22 +26,22 @@ public class TrackableLink {
             return false;
         }
 
-        TrackableLink that = (TrackableLink) o;
+        Subscription that = (Subscription) o;
 
-        if (!Objects.equals(url, that.url)) {
+        if (chatId != that.chatId) {
             return false;
         }
-        if (!Objects.equals(lastChange, that.lastChange)) {
+        if (!Objects.equals(linkUrl, that.linkUrl)) {
             return false;
         }
-        return Objects.equals(lastCrawl, that.lastCrawl);
+        return Objects.equals(lastUpdate, that.lastUpdate);
     }
 
     @Override
     public int hashCode() {
-        int result = url != null ? url.hashCode() : 0;
-        result = 31 * result + (lastChange != null ? lastChange.hashCode() : 0);
-        result = 31 * result + (lastCrawl != null ? lastCrawl.hashCode() : 0);
+        int result = (int) (chatId ^ (chatId >>> 32));
+        result = 31 * result + (linkUrl != null ? linkUrl.hashCode() : 0);
+        result = 31 * result + (lastUpdate != null ? lastUpdate.hashCode() : 0);
         return result;
     }
 }

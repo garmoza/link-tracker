@@ -4,6 +4,7 @@ import edu.java.model.response.TgChatResponse;
 import edu.java.scrapper.entity.TgChat;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TgChatModelMapperTest {
 
@@ -15,5 +16,12 @@ class TgChatModelMapperTest {
 
         TgChatResponse expected = new TgChatResponse(2L);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void toTgChatResponse_EntityIsNull() {
+        TgChatResponse actual = TgChatModelMapper.toTgChatResponse(null);
+
+        assertNull(actual);
     }
 }

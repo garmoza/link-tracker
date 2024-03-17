@@ -18,8 +18,11 @@ public class JdbcTgChatRepository implements TgChatRepository {
 
     @Override
     public TgChat add(TgChat chat) {
-        jdbcTemplate.update("INSERT INTO tg_chat VALUES (?)", chat.getId());
-        return chat;
+        return jdbcTemplate.queryForObject(
+            "INSERT INTO tg_chat VALUES (?) RETURNING *",
+            new BeanPropertyRowMapper<>(TgChat.class),
+            chat.getId()
+        );
     }
 
     @Override
@@ -48,6 +51,6 @@ public class JdbcTgChatRepository implements TgChatRepository {
 
     @Override
     public void remove(long id) {
-        jdbcTemplate.update("DELETE FROM tg_chat WHERE id = ?", id);
+        jdbcTemplate.update("DELETE FROM tg_chat WHERE id=?", id);
     }
 }

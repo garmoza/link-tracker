@@ -5,7 +5,7 @@ import edu.java.model.request.RemoveLinkRequest;
 import edu.java.model.response.LinkResponse;
 import edu.java.model.response.ListLinksResponse;
 import edu.java.scrapper.api.LinkControllerApi;
-import edu.java.scrapper.service.LinkService;
+import edu.java.scrapper.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LinkController implements LinkControllerApi {
 
-    private final LinkService linkService;
+    private final SubscriptionService subscriptionService;
 
     @Override
     public ResponseEntity<ListLinksResponse> getAllLinks(Long tgChatId) {
-        return linkService.getAllLinksByChatId(tgChatId);
+        return subscriptionService.getAllLinksByChatId(tgChatId);
     }
 
     @Override
     public ResponseEntity<LinkResponse> addLink(Long tgChatId, AddLinkRequest dto) {
-        return linkService.subscribeLink(tgChatId, dto);
+        return subscriptionService.subscribeLink(tgChatId, dto);
     }
 
     @Override
@@ -31,6 +31,6 @@ public class LinkController implements LinkControllerApi {
         Long tgChatId,
         RemoveLinkRequest dto
     ) {
-        return linkService.unsubscribeLink(tgChatId, dto);
+        return subscriptionService.unsubscribeLink(tgChatId, dto);
     }
 }

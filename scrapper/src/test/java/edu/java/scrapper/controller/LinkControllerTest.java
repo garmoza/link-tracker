@@ -7,7 +7,7 @@ import edu.java.model.response.LinkResponse;
 import edu.java.model.response.ListLinksResponse;
 import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
-import edu.java.scrapper.service.LinkService;
+import edu.java.scrapper.service.SubscriptionService;
 import jakarta.validation.ConstraintViolationException;
 import java.net.URI;
 import java.util.List;
@@ -43,7 +43,7 @@ class LinkControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private LinkService linkService;
+    private SubscriptionService subscriptionService;
 
     @Test
     void getAllLinks_Ok() throws Exception {
@@ -54,7 +54,7 @@ class LinkControllerTest {
             ))
             .size(2)
             .build();
-        when(linkService.getAllLinksByChatId(any(Long.class))).thenReturn(ResponseEntity.ok(responseBody));
+        when(subscriptionService.getAllLinksByChatId(any(Long.class))).thenReturn(ResponseEntity.ok(responseBody));
 
         ResultActions response = mockMvc.perform(get("/links")
             .accept(MediaType.APPLICATION_JSON)
@@ -120,7 +120,7 @@ class LinkControllerTest {
     @Test
     void addLink_Ok() throws Exception {
         var responseBody = new LinkResponse(1L, URI.create("https://example.com"));
-        when(linkService.subscribeLink(any(Long.class), any())).thenReturn(ResponseEntity.ok(responseBody));
+        when(subscriptionService.subscribeLink(any(Long.class), any())).thenReturn(ResponseEntity.ok(responseBody));
 
         var requestBody = new AddLinkRequest("https://example.com");
         ResultActions response = mockMvc.perform(post("/links")
@@ -204,7 +204,7 @@ class LinkControllerTest {
     @Test
     void addLink_AlreadyExists() throws Exception {
         var link = new LinkResponse(2L, URI.create("https://example.com"));
-        when(linkService.subscribeLink(any(Long.class), any())).thenThrow(new LinkAlreadyExistsException(link));
+        when(subscriptionService.subscribeLink(any(Long.class), any())).thenThrow(new LinkAlreadyExistsException(link));
         var requestBody = new AddLinkRequest("https://example.com");
         ResultActions response = mockMvc.perform(post("/links")
             .accept(MediaType.APPLICATION_JSON)
@@ -222,7 +222,7 @@ class LinkControllerTest {
     @Test
     void deleteLink_Ok() throws Exception {
         var responseBody = new LinkResponse(1L, URI.create("https://example.com"));
-        when(linkService.unsubscribeLink(any(Long.class), any())).thenReturn(ResponseEntity.ok(responseBody));
+        when(subscriptionService.unsubscribeLink(any(Long.class), any())).thenReturn(ResponseEntity.ok(responseBody));
 
         var requestBody = new RemoveLinkRequest("https://example.com");
         ResultActions response = mockMvc.perform(delete("/links")
@@ -305,7 +305,7 @@ class LinkControllerTest {
 
     @Test
     void deleteLink_NotFound() throws Exception {
-        when(linkService.unsubscribeLink(
+        when(subscriptionService.unsubscribeLink(
             any(Long.class),
             any()
         )).thenThrow(new LinkNotFoundException("https://example.com"));

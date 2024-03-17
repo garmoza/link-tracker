@@ -6,7 +6,7 @@ import edu.java.model.response.LinkResponse;
 import edu.java.model.response.ListLinksResponse;
 import org.springframework.http.ResponseEntity;
 
-public interface LinkService {
+public interface SubscriptionService {
 
     ResponseEntity<ListLinksResponse> getAllLinksByChatId(long tgChatId);
 
