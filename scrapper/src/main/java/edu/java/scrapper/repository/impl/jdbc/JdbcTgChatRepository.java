@@ -1,4 +1,4 @@
-package edu.java.scrapper.repository.impl;
+package edu.java.scrapper.repository.impl.jdbc;
 
 import edu.java.scrapper.entity.TgChat;
 import edu.java.scrapper.repository.TgChatRepository;
