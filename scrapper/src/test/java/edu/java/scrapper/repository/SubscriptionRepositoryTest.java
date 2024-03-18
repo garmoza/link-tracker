@@ -80,23 +80,19 @@ class SubscriptionRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void update() {
-        subscriptionRepository.subscribe(Subscription.builder()
-            .chatId(1L)
-            .linkUrl("https://example.com")
-            .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
-            .build());
+    void updateOldByUrl() {
+        addTgChat(2L);
+        subscriptionRepository.subscribe(
+            new Subscription(1L, "https://example.com", OffsetDateTime.parse("2024-03-17T12:00:00Z")));
+        subscriptionRepository.subscribe(
+            new Subscription(2L, "https://example.com", OffsetDateTime.parse("2024-03-17T14:00:00Z")));
 
-        var actual = subscriptionRepository.update(Subscription.builder()
-            .chatId(1L)
-            .linkUrl("https://example.com")
-            .lastUpdate(OffsetDateTime.parse("2024-04-18T15:00:00Z"))
-            .build());
-        var expected = Subscription.builder()
-            .chatId(1L)
-            .linkUrl("https://example.com")
-            .lastUpdate(OffsetDateTime.parse("2024-04-18T15:00:00Z"))
-            .build();
+        List<Subscription> actual = subscriptionRepository.updateOldByUrl(
+            "https://example.com", OffsetDateTime.parse("2024-03-17T13:00:00Z"));
+
+        List<Subscription> expected = List.of(
+            new Subscription(1L, "https://example.com", OffsetDateTime.parse("2024-03-17T13:00:00Z"))
+        );
         assertEquals(expected, actual);
     }
 

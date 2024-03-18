@@ -1,9 +1,8 @@
 package edu.java.scrapper.service;
 
-import edu.java.model.request.LinkUpdate;
-import java.time.OffsetDateTime;
+import edu.java.scrapper.entity.TrackableLink;
 
 public interface UpdateService {
 
-    void update(LinkUpdate linkUpdate, OffsetDateTime lastChange, OffsetDateTime lastCrawl);
+    void update(TrackableLink link);
 }

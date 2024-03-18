@@ -1,9 +1,9 @@
 package edu.java.scrapper.processor;
 
-import edu.java.scrapper.client.BotClient;
 import edu.java.scrapper.client.StackOverflowClient;
+import edu.java.scrapper.dto.stackoverflow.QuestionResponse;
 import edu.java.scrapper.entity.TrackableLink;
-import edu.java.scrapper.repository.TrackableLinkRepository;
+import edu.java.scrapper.service.UpdateService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.regex.Matcher;
@@ -18,8 +18,7 @@ public class StackOverflowProcessor implements SourceProcessor {
     private static final Pattern QUESTION_PATTERN = Pattern.compile("^/questions/(?<questionId>\\d+)(/[\\w-]*)?(/)?$");
 
     private final StackOverflowClient stackOverflowClient;
-    private final BotClient botClient;
-    private final TrackableLinkRepository trackableLinkRepository;
+    private final UpdateService updateService;
 
     @Override
     public boolean supports(URI url) {
@@ -41,13 +40,18 @@ public class StackOverflowProcessor implements SourceProcessor {
         if (matcher.matches()) {
             int id = Integer.parseInt(matcher.group("questionId"));
 
-            OffsetDateTime lastChange = stackOverflowClient.fetchQuestion(id).blockOptional()
-                .map(response -> response.items().getFirst().lastActivityDate())
+            QuestionResponse response = stackOverflowClient.fetchQuestion(id)
+                .blockOptional()
                 .orElseThrow(RuntimeException::new);
 
-            if (lastChange.isAfter(trackableLink.getLastChange())) {
-                //TODO: update database, make request with BotClient
-            }
+            OffsetDateTime lastChange = response.items().getFirst().lastActivityDate();
+            TrackableLink newTrackableLink = TrackableLink.builder()
+                .url(trackableLink.getUrl())
+                .lastChange(lastChange)
+                .lastCrawl(OffsetDateTime.now())
+                .build();
+
+            updateService.update(newTrackableLink);
         }
     }
 }

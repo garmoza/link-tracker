@@ -2,7 +2,9 @@ package edu.java.scrapper.scheduler;
 
 import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.java.scrapper.entity.TrackableLink;
+import edu.java.scrapper.processor.SourceProcessor;
 import edu.java.scrapper.repository.TrackableLinkRepository;
+import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -22,13 +24,28 @@ public class LinkUpdaterScheduler {
 
     private final ApplicationConfig appConfig;
     private final TrackableLinkRepository trackableLinkRepository;
+    private final List<SourceProcessor> sourceProcessors;
 
     @Scheduled(fixedDelayString = "PT${app.scheduler.interval}")
     public void update() {
         Duration interval = appConfig.scheduler().interval();
         OffsetDateTime time = OffsetDateTime.now().minusSeconds(interval.getSeconds());
         List<TrackableLink> links = trackableLinkRepository.findAllByLastCrawlOlder(time);
-        //TODO: use SourceProcessor
+
         log.info("check for updates");
+
+        for (var trackableLink : links) {
+            process(trackableLink);
+        }
+    }
+
+    private void process(TrackableLink trackableLink) {
+        URI url = URI.create(trackableLink.getUrl());
+        for (var processor : sourceProcessors) {
+            if (processor.supports(url)) {
+                processor.processUpdate(trackableLink);
+                return;
+            }
+        }
     }
 }
