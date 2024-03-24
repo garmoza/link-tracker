@@ -5,7 +5,6 @@ import edu.java.scrapper.entity.TrackableLink;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
-import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

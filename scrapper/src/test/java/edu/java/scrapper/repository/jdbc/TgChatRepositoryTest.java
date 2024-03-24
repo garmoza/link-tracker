@@ -4,7 +4,6 @@ import edu.java.scrapper.IntegrationTest;
 import edu.java.scrapper.entity.TgChat;
 import java.util.List;
 import java.util.Optional;
-import edu.java.scrapper.repository.jdbc.TgChatRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
