@@ -25,16 +25,18 @@ public class JdbcSubscriptionRepository implements SubscriptionRepository {
         return jdbcTemplate.queryForObject(
             "INSERT INTO subscribe VALUES (?, ?, ?) RETURNING *",
             this::rowMapper,
-            subscription.getChatId(),
-            subscription.getLinkUrl(),
+            subscription.getId().getChatId(),
+            subscription.getId().getLinkUrl(),
             subscription.getLastUpdate()
         );
     }
 
     private Subscription rowMapper(ResultSet rs, int rowNum) throws SQLException {
         return Subscription.builder()
-            .chatId(rs.getLong("tg_chat_id"))
-            .linkUrl(rs.getString("trackable_link_url"))
+            .id(Subscription.Id.builder()
+                .chatId(rs.getLong("tg_chat_id"))
+                .linkUrl(rs.getString("trackable_link_url"))
+                .build())
             .lastUpdate(rs.getObject("last_update", OffsetDateTime.class))
             .build();
     }
@@ -44,8 +46,8 @@ public class JdbcSubscriptionRepository implements SubscriptionRepository {
         return jdbcTemplate.queryForObject(
             "DELETE FROM subscribe WHERE tg_chat_id=? AND trackable_link_url=? RETURNING *",
             this::rowMapper,
-            subscription.getChatId(),
-            subscription.getLinkUrl()
+            subscription.getId().getChatId(),
+            subscription.getId().getLinkUrl()
         );
     }
 

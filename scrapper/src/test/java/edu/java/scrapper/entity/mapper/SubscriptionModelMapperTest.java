@@ -15,8 +15,7 @@ class SubscriptionModelMapperTest {
     @Test
     void toLinkResponse() {
         Subscription entity = Subscription.builder()
-            .chatId(1L)
-            .linkUrl("https://example.com")
+            .id(new Subscription.Id(1L, "https://example.com"))
             .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
             .build();
 
@@ -39,8 +38,14 @@ class SubscriptionModelMapperTest {
     @Test
     void toListLinksResponse() {
         List<Subscription> entities = List.of(
-            new Subscription(1L, "https://example1.com", OffsetDateTime.parse("2024-03-17T12:00:00Z")),
-            new Subscription(2L, "https://example2.com", OffsetDateTime.parse("2024-03-17T13:00:00Z"))
+            new Subscription(
+                new Subscription.Id(1L, "https://example1.com"),
+                OffsetDateTime.parse("2024-03-17T12:00:00Z")
+            ),
+            new Subscription(
+                new Subscription.Id(2L, "https://example2.com"),
+                OffsetDateTime.parse("2024-03-17T13:00:00Z")
+            )
         );
 
         ListLinksResponse actual = SubscriptionModelMapper.toListLinksResponse(entities);

@@ -27,7 +27,7 @@ public class JdbcUpdateService implements UpdateService {
         List<Subscription> updatedSubs = subscriptionRepository.updateOldByUrl(link.getUrl(), link.getLastChange());
 
         List<Long> tgChatIds = updatedSubs.stream()
-            .map(Subscription::getChatId)
+            .map(sub -> sub.getId().getChatId())
             .toList();
         LinkUpdate linkUpdate = LinkUpdate.builder()
             .url(link.getUrl())

@@ -58,8 +58,7 @@ class SubscriptionRepositoryTest extends IntegrationTest {
 
     private Subscription testSubscription(long chatId, String url) {
         return Subscription.builder()
-            .chatId(chatId)
-            .linkUrl(url)
+            .id(new Subscription.Id(chatId, url))
             .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
             .build();
     }
@@ -83,15 +82,24 @@ class SubscriptionRepositoryTest extends IntegrationTest {
     void updateOldByUrl() {
         addTgChat(2L);
         subscriptionRepository.subscribe(
-            new Subscription(1L, "https://example.com", OffsetDateTime.parse("2024-03-17T12:00:00Z")));
+            new Subscription(
+                new Subscription.Id(1L, "https://example.com"),
+                OffsetDateTime.parse("2024-03-17T12:00:00Z")
+            ));
         subscriptionRepository.subscribe(
-            new Subscription(2L, "https://example.com", OffsetDateTime.parse("2024-03-17T14:00:00Z")));
+            new Subscription(
+                new Subscription.Id(2L, "https://example.com"),
+                OffsetDateTime.parse("2024-03-17T14:00:00Z")
+            ));
 
         List<Subscription> actual = subscriptionRepository.updateOldByUrl(
             "https://example.com", OffsetDateTime.parse("2024-03-17T13:00:00Z"));
 
         List<Subscription> expected = List.of(
-            new Subscription(1L, "https://example.com", OffsetDateTime.parse("2024-03-17T13:00:00Z"))
+            new Subscription(
+                new Subscription.Id(1L, "https://example.com"),
+                OffsetDateTime.parse("2024-03-17T13:00:00Z")
+            )
         );
         assertEquals(expected, actual);
     }

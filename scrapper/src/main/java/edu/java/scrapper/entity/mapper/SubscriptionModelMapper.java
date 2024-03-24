@@ -17,8 +17,8 @@ public class SubscriptionModelMapper {
         }
 
         return LinkResponse.builder()
-            .id(entity.getChatId())
-            .url(URI.create(entity.getLinkUrl()))
+            .id(entity.getId().getChatId())
+            .url(URI.create(entity.getId().getLinkUrl()))
             .build();
     }
 

@@ -52,8 +52,7 @@ public class JdbcSubscriptionService implements SubscriptionService {
 
         Subscription subscription = subscriptionRepository.subscribe(
             Subscription.builder()
-                .chatId(chat.getId())
-                .linkUrl(link.getUrl())
+                .id(new Subscription.Id(chat.getId(), link.getUrl()))
                 .lastUpdate(link.getLastChange())
                 .build()
         );

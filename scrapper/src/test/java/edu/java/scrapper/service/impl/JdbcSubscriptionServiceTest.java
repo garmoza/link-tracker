@@ -43,8 +43,14 @@ class JdbcSubscriptionServiceTest {
     @Test
     void getAllLinksByChatId() {
         when(subscriptionRepository.findAllByChatId(1L)).thenReturn(List.of(
-            new Subscription(1L, "https://example1.com", OffsetDateTime.parse("2024-03-17T12:00:00Z")),
-            new Subscription(1L, "https://example2.com", OffsetDateTime.parse("2024-03-17T13:00:00Z"))
+            new Subscription(
+                new Subscription.Id(1L, "https://example1.com"),
+                OffsetDateTime.parse("2024-03-17T12:00:00Z")
+            ),
+            new Subscription(
+                new Subscription.Id(1L, "https://example2.com"),
+                OffsetDateTime.parse("2024-03-17T13:00:00Z")
+            )
         ));
 
         var actual = subscriptionService.getAllLinksByChatId(1L);
@@ -74,8 +80,7 @@ class JdbcSubscriptionServiceTest {
         when(subscriptionRepository.existsByTgChatAndTrackableLink(any(), any())).thenReturn(false);
         when(subscriptionRepository.subscribe(any())).thenReturn(
             Subscription.builder()
-                .chatId(1L)
-                .linkUrl("https://example.com")
+                .id(new Subscription.Id(1L, "https://example.com"))
                 .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
                 .build()
         );
@@ -131,8 +136,7 @@ class JdbcSubscriptionServiceTest {
         when(subscriptionRepository.existsByTgChatAndTrackableLink(any(), any())).thenReturn(false);
         when(subscriptionRepository.subscribe(any())).thenReturn(
             Subscription.builder()
-                .chatId(1L)
-                .linkUrl("https://example.com")
+                .id(new Subscription.Id(1L, "https://example.com"))
                 .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
                 .build()
         );
@@ -198,14 +202,12 @@ class JdbcSubscriptionServiceTest {
         ));
         when(subscriptionRepository.findByTgChatAndTrackableLink(any(), any())).thenReturn(Optional.of(
             Subscription.builder()
-                .linkUrl("https://example.com")
-                .chatId(1L)
+                .id(new Subscription.Id(1L, "https://example.com"))
                 .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
                 .build()
         ));
         when(subscriptionRepository.unsubscribe(any())).thenReturn(Subscription.builder()
-            .chatId(1L)
-            .linkUrl("https://example.com")
+            .id(new Subscription.Id(1L, "https://example.com"))
             .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
             .build()
         );
