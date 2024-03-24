@@ -1,19 +1,22 @@
-package edu.java.scrapper.service.impl.jdbc;
+package edu.java.scrapper.service.impl.jpa;
 
 import edu.java.model.response.TgChatResponse;
 import edu.java.scrapper.entity.TgChat;
 import edu.java.scrapper.entity.mapper.TgChatModelMapper;
 import edu.java.scrapper.exception.TgChatAlreadyExistsException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
-import edu.java.scrapper.repository.jdbc.TgChatRepository;
+import edu.java.scrapper.repository.jpa.TgChatRepository;
 import edu.java.scrapper.service.TgChatService;
 import java.util.List;
+import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
-public class JdbcTgChatService implements TgChatService {
+public class JpaTgChatService implements TgChatService {
 
     private final TgChatRepository tgChatRepository;
 
@@ -22,14 +25,13 @@ public class JdbcTgChatService implements TgChatService {
         if (tgChatRepository.existsById(id)) {
             throw new TgChatAlreadyExistsException();
         }
-        tgChatRepository.add(new TgChat(id));
+        tgChatRepository.save(new TgChat(id));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<TgChatResponse>> getAllChats() {
-        var chats = tgChatRepository.findAll()
-            .stream()
+        var chats = StreamSupport.stream(tgChatRepository.findAll().spliterator(), false)
             .map(TgChatModelMapper::toTgChatResponse)
             .toList();
         return ResponseEntity.ok(chats);
@@ -40,7 +42,7 @@ public class JdbcTgChatService implements TgChatService {
         if (!tgChatRepository.existsById(id)) {
             throw new TgChatNotFoundException(id);
         }
-        tgChatRepository.remove(id);
+        tgChatRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

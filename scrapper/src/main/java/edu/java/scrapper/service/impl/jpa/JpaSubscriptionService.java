@@ -1,4 +1,4 @@
-package edu.java.scrapper.service.impl.jdbc;
+package edu.java.scrapper.service.impl.jpa;
 
 import edu.java.model.request.AddLinkRequest;
 import edu.java.model.request.RemoveLinkRequest;
@@ -11,18 +11,20 @@ import edu.java.scrapper.entity.mapper.SubscriptionModelMapper;
 import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
-import edu.java.scrapper.repository.jdbc.SubscriptionRepository;
-import edu.java.scrapper.repository.jdbc.TgChatRepository;
-import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
+import edu.java.scrapper.repository.jpa.SubscriptionRepository;
+import edu.java.scrapper.repository.jpa.TgChatRepository;
+import edu.java.scrapper.repository.jpa.TrackableLinkRepository;
 import edu.java.scrapper.service.SubscriptionService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 @RequiredArgsConstructor
-public class JdbcSubscriptionService implements SubscriptionService {
+public class JpaSubscriptionService implements SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
     private final TgChatRepository tgChatRepository;
@@ -40,15 +42,15 @@ public class JdbcSubscriptionService implements SubscriptionService {
     public ResponseEntity<LinkResponse> subscribeLink(long tgChatId, AddLinkRequest dto) {
         TgChat chat = tgChatRepository.findById(tgChatId)
             .orElseThrow(() -> new TgChatNotFoundException(tgChatId));
-        TrackableLink link = trackableLinkRepository.findByUrl(dto.link())
+        TrackableLink link = trackableLinkRepository.findById(dto.link())
             .orElse(addTrackableLink(dto.link()));
 
-        if (subscriptionRepository.existsByTgChatAndTrackableLink(chat, link)) {
+        if (subscriptionRepository.existsById(new Subscription.Id(chat.getId(), link.getUrl()))) {
             LinkResponse response = new LinkResponse(chat.getId(), URI.create(link.getUrl()));
             throw new LinkAlreadyExistsException(response);
         }
 
-        Subscription subscription = subscriptionRepository.subscribe(
+        Subscription subscription = subscriptionRepository.save(
             Subscription.builder()
                 .id(new Subscription.Id(chat.getId(), link.getUrl()))
                 .lastUpdate(link.getLastChange())
@@ -67,19 +69,19 @@ public class JdbcSubscriptionService implements SubscriptionService {
             .lastChange(now)
             .lastCrawl(now)
             .build();
-        return trackableLinkRepository.add(link);
+        return trackableLinkRepository.save(link);
     }
 
     @Override
     public ResponseEntity<LinkResponse> unsubscribeLink(long tgChatId, RemoveLinkRequest dto) {
         TgChat chat = tgChatRepository.findById(tgChatId)
             .orElseThrow(() -> new LinkNotFoundException(dto.link()));
-        TrackableLink link = trackableLinkRepository.findByUrl(dto.link())
+        TrackableLink link = trackableLinkRepository.findById(dto.link())
             .orElseThrow(() -> new LinkNotFoundException(dto.link()));
-        Subscription sub = subscriptionRepository.findByTgChatAndTrackableLink(chat, link)
+        Subscription sub = subscriptionRepository.findById(new Subscription.Id(chat.getId(), link.getUrl()))
             .orElseThrow(() -> new LinkNotFoundException(dto.link()));
 
-        sub = subscriptionRepository.unsubscribe(sub);
+        subscriptionRepository.delete(sub);
 
         var body = SubscriptionModelMapper.toLinkResponse(sub);
 

@@ -1,27 +1,27 @@
-package edu.java.scrapper.service.impl.jdbc;
+package edu.java.scrapper.service.impl.jpa;
 
 import edu.java.model.request.LinkUpdate;
 import edu.java.scrapper.client.BotClient;
 import edu.java.scrapper.entity.Subscription;
 import edu.java.scrapper.entity.TrackableLink;
-import edu.java.scrapper.repository.jdbc.SubscriptionRepository;
-import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
+import edu.java.scrapper.repository.jpa.SubscriptionRepository;
+import edu.java.scrapper.repository.jpa.TrackableLinkRepository;
 import edu.java.scrapper.service.UpdateService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
-public class JdbcUpdateService implements UpdateService {
+public class JpaUpdateService implements UpdateService {
 
     private final TrackableLinkRepository trackableLinkRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final BotClient botClient;
 
     @Override
-    @Transactional
     public void update(TrackableLink link) {
-        trackableLinkRepository.update(link);
+        trackableLinkRepository.save(link);
         List<Subscription> updatedSubs = subscriptionRepository.updateOldByUrl(link.getUrl(), link.getLastChange());
 
         List<Long> tgChatIds = updatedSubs.stream()
