@@ -9,10 +9,10 @@ import edu.java.scrapper.repository.jpa.TrackableLinkRepository;
 import edu.java.scrapper.service.UpdateService;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
 public class JpaUpdateService implements UpdateService {
 
@@ -26,11 +26,14 @@ public class JpaUpdateService implements UpdateService {
     }
 
     @Override
+    @Transactional
     public void update(TrackableLink link) {
         trackableLinkRepository.save(link);
-        List<Subscription> updatedSubs = subscriptionRepository.updateOldByUrl(link.getUrl(), link.getLastChange());
+        List<Subscription> subsToUpdate =
+            subscriptionRepository.findAllByUrlAndOlderLastChange(link.getUrl(), link.getLastChange());
+        Iterable<Subscription> updatedSubs = subscriptionRepository.saveAll(subsToUpdate);
 
-        List<Long> tgChatIds = updatedSubs.stream()
+        List<Long> tgChatIds = StreamSupport.stream(updatedSubs.spliterator(), false)
             .map(sub -> sub.getId().getChatId())
             .toList();
         LinkUpdate linkUpdate = LinkUpdate.builder()

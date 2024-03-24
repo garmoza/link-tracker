@@ -14,6 +14,9 @@ public interface SubscriptionRepository extends CrudRepository<Subscription, Sub
     @Query("SELECT s FROM Subscription s WHERE s.id.chatId = :chatId")
     List<Subscription> findAllByChatId(@Param("chatId") long chatId);
 
-    @Query("UPDATE Subscription SET lastUpdate = :lastChange WHERE id.linkUrl = :url AND lastUpdate < :lastChange")
-    List<Subscription> updateOldByUrl(@Param("url") String url, @Param("lastChange") OffsetDateTime lastChange);
+    @Query("SELECT s FROM Subscription s WHERE s.id.linkUrl = :url AND s.lastUpdate < :lastChange")
+    List<Subscription> findAllByUrlAndOlderLastChange(
+        @Param("url") String url,
+        @Param("lastChange") OffsetDateTime lastChange
+    );
 }

@@ -77,8 +77,29 @@ class SubscriptionRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void updateOldByUrl() {
-        //TODO: write test
+    void findAllByUrlAndOlderLastChange() {
+        saveTgChat(2L);
+        subscriptionRepository.save(
+            new Subscription(
+                new Subscription.Id(1L, "https://example.com"),
+                OffsetDateTime.parse("2024-03-17T12:00:00Z")
+            ));
+        subscriptionRepository.save(
+            new Subscription(
+                new Subscription.Id(2L, "https://example.com"),
+                OffsetDateTime.parse("2024-03-17T14:00:00Z")
+            ));
+
+        List<Subscription> actual = subscriptionRepository.findAllByUrlAndOlderLastChange(
+            "https://example.com", OffsetDateTime.parse("2024-03-17T13:00:00Z"));
+
+        List<Subscription> expected = List.of(
+            new Subscription(
+                new Subscription.Id(1L, "https://example.com"),
+                OffsetDateTime.parse("2024-03-17T12:00:00Z")
+            )
+        );
+        assertEquals(expected, actual);
     }
 
     @Test
