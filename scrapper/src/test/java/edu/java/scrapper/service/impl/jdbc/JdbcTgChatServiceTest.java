@@ -1,4 +1,4 @@
-package edu.java.scrapper.service.impl;
+package edu.java.scrapper.service.impl.jdbc;
 
 import edu.java.model.response.TgChatResponse;
 import edu.java.scrapper.entity.TgChat;
@@ -6,6 +6,8 @@ import edu.java.scrapper.exception.TgChatAlreadyExistsException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
 import edu.java.scrapper.repository.TgChatRepository;
 import java.util.List;
+
+import edu.java.scrapper.service.impl.JdbcTgChatService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
