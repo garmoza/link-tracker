@@ -30,6 +30,7 @@ public class LinkUpdaterScheduler {
     public void update() {
         Duration interval = appConfig.scheduler().interval();
         OffsetDateTime time = OffsetDateTime.now().minusSeconds(interval.getSeconds());
+        //TODO: replace with configurable service call
         List<TrackableLink> links = trackableLinkRepository.findAllByLastCrawlOlder(time);
 
         log.info("check for updates");

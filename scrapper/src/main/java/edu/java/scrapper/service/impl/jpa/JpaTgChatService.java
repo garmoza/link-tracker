@@ -8,7 +8,6 @@ import edu.java.scrapper.exception.TgChatNotFoundException;
 import edu.java.scrapper.repository.jpa.TgChatRepository;
 import edu.java.scrapper.service.TgChatService;
 import java.util.List;
-import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,8 @@ public class JpaTgChatService implements TgChatService {
 
     @Override
     public ResponseEntity<List<TgChatResponse>> getAllChats() {
-        var chats = StreamSupport.stream(tgChatRepository.findAll().spliterator(), false)
+        var chats = tgChatRepository.findAll()
+            .stream()
             .map(TgChatModelMapper::toTgChatResponse)
             .toList();
         return ResponseEntity.ok(chats);
