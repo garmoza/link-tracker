@@ -1,4 +1,4 @@
-package edu.java.scrapper.service.impl;
+package edu.java.scrapper.service.impl.jdbc;
 
 import edu.java.model.request.AddLinkRequest;
 import edu.java.model.request.RemoveLinkRequest;
@@ -11,9 +11,9 @@ import edu.java.scrapper.entity.mapper.SubscriptionModelMapper;
 import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
-import edu.java.scrapper.repository.SubscriptionRepository;
-import edu.java.scrapper.repository.TgChatRepository;
-import edu.java.scrapper.repository.TrackableLinkRepository;
+import edu.java.scrapper.repository.jdbc.SubscriptionRepository;
+import edu.java.scrapper.repository.jdbc.TgChatRepository;
+import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
 import edu.java.scrapper.service.SubscriptionService;
 import java.net.URI;
 import java.time.OffsetDateTime;

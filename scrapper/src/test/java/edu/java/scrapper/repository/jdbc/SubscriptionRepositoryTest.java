@@ -1,4 +1,4 @@
-package edu.java.scrapper.repository;
+package edu.java.scrapper.repository.jdbc;
 
 import edu.java.scrapper.IntegrationTest;
 import edu.java.scrapper.entity.Subscription;
@@ -7,6 +7,9 @@ import edu.java.scrapper.entity.TrackableLink;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import edu.java.scrapper.repository.jdbc.SubscriptionRepository;
+import edu.java.scrapper.repository.jdbc.TgChatRepository;
+import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

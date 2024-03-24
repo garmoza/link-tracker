@@ -1,11 +1,11 @@
-package edu.java.scrapper.service.impl;
+package edu.java.scrapper.service.impl.jdbc;
 
 import edu.java.model.request.LinkUpdate;
 import edu.java.scrapper.client.BotClient;
 import edu.java.scrapper.entity.Subscription;
 import edu.java.scrapper.entity.TrackableLink;
-import edu.java.scrapper.repository.SubscriptionRepository;
-import edu.java.scrapper.repository.TrackableLinkRepository;
+import edu.java.scrapper.repository.jdbc.SubscriptionRepository;
+import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
 import edu.java.scrapper.service.UpdateService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

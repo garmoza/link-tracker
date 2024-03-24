@@ -1,9 +1,9 @@
-package edu.java.scrapper.repository.impl.jdbc;
+package edu.java.scrapper.repository.jdbc.impl;
 
 import edu.java.scrapper.entity.Subscription;
 import edu.java.scrapper.entity.TgChat;
 import edu.java.scrapper.entity.TrackableLink;
-import edu.java.scrapper.repository.SubscriptionRepository;
+import edu.java.scrapper.repository.jdbc.SubscriptionRepository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;

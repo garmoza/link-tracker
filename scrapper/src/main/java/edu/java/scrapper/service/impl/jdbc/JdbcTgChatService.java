@@ -1,11 +1,11 @@
-package edu.java.scrapper.service.impl;
+package edu.java.scrapper.service.impl.jdbc;
 
 import edu.java.model.response.TgChatResponse;
 import edu.java.scrapper.entity.TgChat;
 import edu.java.scrapper.entity.mapper.TgChatModelMapper;
 import edu.java.scrapper.exception.TgChatAlreadyExistsException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
-import edu.java.scrapper.repository.TgChatRepository;
+import edu.java.scrapper.repository.jdbc.TgChatRepository;
 import edu.java.scrapper.service.TgChatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

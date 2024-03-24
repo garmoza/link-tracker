@@ -1,7 +1,7 @@
-package edu.java.scrapper.repository.impl.jdbc;
+package edu.java.scrapper.repository.jdbc.impl;
 
 import edu.java.scrapper.entity.TgChat;
-import edu.java.scrapper.repository.TgChatRepository;
+import edu.java.scrapper.repository.jdbc.TgChatRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

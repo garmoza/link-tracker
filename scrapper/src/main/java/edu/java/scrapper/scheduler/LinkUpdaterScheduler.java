@@ -3,7 +3,7 @@ package edu.java.scrapper.scheduler;
 import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.java.scrapper.entity.TrackableLink;
 import edu.java.scrapper.processor.SourceProcessor;
-import edu.java.scrapper.repository.TrackableLinkRepository;
+import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
