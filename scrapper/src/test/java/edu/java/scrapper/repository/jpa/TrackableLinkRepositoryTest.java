@@ -136,6 +136,27 @@ class TrackableLinkRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void findAllByLastCrawlOlder() {
-        //TODO: write test
+        trackableLinkRepository.save(TrackableLink.builder()
+            .url("https://example1.com")
+            .lastChange(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .lastCrawl(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .build()
+        );
+        trackableLinkRepository.save(TrackableLink.builder()
+            .url("https://example2.com")
+            .lastChange(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .lastCrawl(OffsetDateTime.parse("2024-03-17T14:00:00Z"))
+            .build()
+        );
+
+        List<TrackableLink> actual = trackableLinkRepository.findAllByLastCrawlOlder(
+            OffsetDateTime.parse("2024-03-17T13:00:00Z"));
+
+        List<TrackableLink> expected = List.of(TrackableLink.builder()
+            .url("https://example1.com")
+            .lastChange(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .lastCrawl(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
+            .build());
+        assertEquals(expected, actual);
     }
 }

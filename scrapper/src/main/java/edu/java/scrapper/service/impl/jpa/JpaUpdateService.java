@@ -7,6 +7,7 @@ import edu.java.scrapper.entity.TrackableLink;
 import edu.java.scrapper.repository.jpa.SubscriptionRepository;
 import edu.java.scrapper.repository.jpa.TrackableLinkRepository;
 import edu.java.scrapper.service.UpdateService;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,11 @@ public class JpaUpdateService implements UpdateService {
     private final TrackableLinkRepository trackableLinkRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final BotClient botClient;
+
+    @Override
+    public List<TrackableLink> getAllLinksNeedToCrawling(OffsetDateTime time) {
+        return trackableLinkRepository.findAllByLastCrawlOlder(time);
+    }
 
     @Override
     public void update(TrackableLink link) {

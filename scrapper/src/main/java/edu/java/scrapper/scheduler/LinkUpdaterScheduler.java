@@ -3,7 +3,7 @@ package edu.java.scrapper.scheduler;
 import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.java.scrapper.entity.TrackableLink;
 import edu.java.scrapper.processor.SourceProcessor;
-import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
+import edu.java.scrapper.service.UpdateService;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -23,15 +23,14 @@ import org.springframework.stereotype.Component;
 public class LinkUpdaterScheduler {
 
     private final ApplicationConfig appConfig;
-    private final TrackableLinkRepository trackableLinkRepository;
+    private final UpdateService updateService;
     private final List<SourceProcessor> sourceProcessors;
 
     @Scheduled(fixedDelayString = "PT${app.scheduler.interval}")
     public void update() {
         Duration interval = appConfig.scheduler().interval();
         OffsetDateTime time = OffsetDateTime.now().minusSeconds(interval.getSeconds());
-        //TODO: replace with configurable service call
-        List<TrackableLink> links = trackableLinkRepository.findAllByLastCrawlOlder(time);
+        List<TrackableLink> links = updateService.getAllLinksNeedToCrawling(time);
 
         log.info("check for updates");
 
