@@ -38,7 +38,7 @@ class UpdateControllerTest {
     void sendUpdates_Ok() throws Exception {
         when(updateService.sendUpdate(any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-        var requestBody = new LinkUpdate(1L, "url-test", "description-test", List.of(2L));
+        var requestBody = new LinkUpdate("url-test", "description-test", List.of(2L));
         ResultActions response = mockMvc.perform(post("/updates")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(requestBody)));

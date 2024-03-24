@@ -42,7 +42,6 @@ class BotClientTest {
     void sendUpdate_Ok() {
         var requestBody = """
             {
-                "id": 1,
                 "url": "https://example.com",
                 "description": "Description",
                 "tgChatIds": [2, 3]
@@ -52,7 +51,7 @@ class BotClientTest {
             .withRequestBody(equalToJson(requestBody))
             .willReturn(ok()));
 
-        LinkUpdate dto = new LinkUpdate(1L, "https://example.com", "Description", List.of(2L, 3L));
+        LinkUpdate dto = new LinkUpdate("https://example.com", "Description", List.of(2L, 3L));
         Mono<Void> result = botClient.sendUpdate(dto);
 
         StepVerifier.create(result)

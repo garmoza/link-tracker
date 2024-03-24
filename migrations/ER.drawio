@@ -1,23 +1,23 @@
-<mxfile host="app.diagrams.net" modified="2024-03-07T11:56:57.592Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="fbMj5tSYgdP9YyPd66hW" version="24.0.2" type="device">
+<mxfile host="app.diagrams.net" modified="2024-03-16T22:04:21.307Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="cCOn5ivqfBOoS5yl-ANm" version="24.0.2" type="device">
   <diagram name="Страница — 1" id="XJs-6eg_Jc6ngkVLYer3">
     <mxGraphModel dx="1647" dy="848" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-9" value="Subsribe" style="shape=associativeEntity;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
-          <mxGeometry x="380" y="170" width="140" height="60" as="geometry" />
+          <mxGeometry x="440" y="170" width="140" height="60" as="geometry" />
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-11" value="Last Change" style="ellipse;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
-          <mxGeometry x="270" y="60" width="100" height="40" as="geometry" />
+          <mxGeometry x="220" y="60" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-12" value="Trackable Link" style="whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
           <mxGeometry x="220" y="180" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-13" value="Telegram Chat" style="whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
-          <mxGeometry x="570" y="180" width="100" height="40" as="geometry" />
+          <mxGeometry x="700" y="180" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-14" value="Chat Id" style="ellipse;whiteSpace=wrap;html=1;align=center;fontStyle=4;" parent="1" vertex="1">
-          <mxGeometry x="570" y="60" width="100" height="40" as="geometry" />
+          <mxGeometry x="700" y="60" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-16" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="b1G6ZlxfaW0F-zb-xRLI-11" target="b1G6ZlxfaW0F-zb-xRLI-12" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -49,21 +49,21 @@
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-19" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="b1G6ZlxfaW0F-zb-xRLI-14" target="b1G6ZlxfaW0F-zb-xRLI-13" edge="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="610" y="400" as="sourcePoint" />
-            <mxPoint x="770" y="400" as="targetPoint" />
+            <mxPoint x="740" y="400" as="sourcePoint" />
+            <mxPoint x="900" y="400" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-22" value="Last Update" style="ellipse;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
-          <mxGeometry x="400" y="110" width="100" height="40" as="geometry" />
+          <mxGeometry x="460" y="110" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-23" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="b1G6ZlxfaW0F-zb-xRLI-22" target="b1G6ZlxfaW0F-zb-xRLI-9" edge="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="420" y="270" as="sourcePoint" />
-            <mxPoint x="580" y="270" as="targetPoint" />
+            <mxPoint x="480" y="270" as="sourcePoint" />
+            <mxPoint x="640" y="270" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-24" value="URL" style="ellipse;whiteSpace=wrap;html=1;align=center;fontStyle=4;" parent="1" vertex="1">
-          <mxGeometry x="160" y="60" width="100" height="40" as="geometry" />
+          <mxGeometry x="110" y="60" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-25" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="b1G6ZlxfaW0F-zb-xRLI-24" target="b1G6ZlxfaW0F-zb-xRLI-12" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -88,7 +88,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-42" value="trackable_link" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;" parent="1" vertex="1">
-          <mxGeometry x="80" y="370" width="180" height="90" as="geometry" />
+          <mxGeometry x="80" y="355" width="180" height="120" as="geometry" />
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-43" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" parent="b1G6ZlxfaW0F-zb-xRLI-42" vertex="1">
           <mxGeometry y="30" width="180" height="30" as="geometry" />
@@ -112,6 +112,19 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="b1G6ZlxfaW0F-zb-xRLI-48" value="last_change" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="b1G6ZlxfaW0F-zb-xRLI-46" vertex="1">
+          <mxGeometry x="30" width="150" height="30" as="geometry">
+            <mxRectangle width="150" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v6ymejaS9993aOVrlkUt-8" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" vertex="1" parent="b1G6ZlxfaW0F-zb-xRLI-42">
+          <mxGeometry y="90" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v6ymejaS9993aOVrlkUt-9" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;" vertex="1" parent="v6ymejaS9993aOVrlkUt-8">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v6ymejaS9993aOVrlkUt-10" value="last_crawl" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" vertex="1" parent="v6ymejaS9993aOVrlkUt-8">
           <mxGeometry x="30" width="150" height="30" as="geometry">
             <mxRectangle width="150" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -169,6 +182,24 @@
             <mxPoint x="240" y="660" as="sourcePoint" />
             <mxPoint x="340" y="560" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="v6ymejaS9993aOVrlkUt-1" value="Last Crawl" style="ellipse;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="330" y="60" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="v6ymejaS9993aOVrlkUt-2" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="b1G6ZlxfaW0F-zb-xRLI-12" target="v6ymejaS9993aOVrlkUt-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280" y="330" as="sourcePoint" />
+            <mxPoint x="330" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v6ymejaS9993aOVrlkUt-4" value="Время последнего изменения&lt;div&gt;на стороне ресурса&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="165" y="3" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="v6ymejaS9993aOVrlkUt-5" value="Время последнего обхода ссылки" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="345" y="15" width="210" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v6ymejaS9993aOVrlkUt-7" value="Время отправки&lt;div&gt;последнего оповещения&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="460" y="60" width="160" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

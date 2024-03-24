@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS trackable_link(
     url text,
     last_change timestamp with time zone not null,
 
-    primary key (url)
+    PRIMARY KEY (url)
 );
 
 --changeset garmoza:3
