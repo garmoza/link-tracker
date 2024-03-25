@@ -3,28 +3,27 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.entity.User;
 import edu.java.bot.mock.MockCommandUtils;
 import edu.java.bot.mock.MockUpdateUtils;
-import edu.java.bot.service.UserService;
+import edu.java.bot.service.ChatService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StartCommandTest {
 
     @Mock
-    private UserService userService;
+    private ChatService chatService;
 
     @Test
     void command() {
-        CommandHandler startCommand = new StartCommand(userService, List.of());
+        CommandHandler startCommand = new StartCommand(chatService, List.of());
 
         String actualCommand = startCommand.command();
 
@@ -33,7 +32,7 @@ class StartCommandTest {
 
     @Test
     void description() {
-        CommandHandler startCommand = new StartCommand(userService, List.of());
+        CommandHandler startCommand = new StartCommand(chatService, List.of());
 
         String actualDescription = startCommand.description();
 
@@ -44,9 +43,9 @@ class StartCommandTest {
     void handle_WithCommands() {
         CommandHandler commandHandler1 = MockCommandUtils.getCommandMock("/command", "description of command");
         CommandHandler commandHandler2 = MockCommandUtils.getCommandMock("/another", "another description");
-        CommandHandler startCommand = new StartCommand(userService, List.of(commandHandler1, commandHandler2));
+        CommandHandler startCommand = new StartCommand(chatService, List.of(commandHandler1, commandHandler2));
 
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """
@@ -62,9 +61,9 @@ class StartCommandTest {
 
     @Test
     void handle_WithoutOtherCommands() {
-        CommandHandler startCommand = new StartCommand(userService, List.of());
+        CommandHandler startCommand = new StartCommand(chatService, List.of());
 
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, "Bob");
         SendMessage actualMessage = startCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """
@@ -78,12 +77,12 @@ class StartCommandTest {
 
     @Test
     void handle_AddsNewUser() {
-        when(userService.saveUser(2L)).thenReturn(new User(2L));
-        CommandHandler startCommand = new StartCommand(userService, List.of());
+        doNothing().when(chatService).registerChat(1L);
+        CommandHandler startCommand = new StartCommand(chatService, List.of());
 
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L, "Bob");
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L, "Bob");
         startCommand.handle(updateMock);
 
-        verify(userService).saveUser(2L);
+        verify(chatService).registerChat(1L);
     }
 }

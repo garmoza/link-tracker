@@ -3,12 +3,10 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.entity.Link;
-import edu.java.bot.entity.User;
 import edu.java.bot.mock.MockUpdateUtils;
-import edu.java.bot.service.UserService;
-import java.util.Optional;
-import java.util.Set;
+import edu.java.bot.service.ChatService;
+import edu.java.bot.service.TrackableLinkService;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -20,11 +18,13 @@ import static org.mockito.Mockito.when;
 class ListCommandTest {
 
     @Mock
-    private UserService userService;
+    private ChatService chatService;
+    @Mock
+    private TrackableLinkService trackableLinkService;
 
     @Test
     void command() {
-        CommandHandler listCommand = new ListCommand(userService);
+        CommandHandler listCommand = new ListCommand(chatService, trackableLinkService);
 
         String actualCommand = listCommand.command();
 
@@ -33,7 +33,7 @@ class ListCommandTest {
 
     @Test
     void description() {
-        CommandHandler listCommand = new ListCommand(userService);
+        CommandHandler listCommand = new ListCommand(chatService, trackableLinkService);
 
         String actualDescription = listCommand.description();
 
@@ -42,10 +42,10 @@ class ListCommandTest {
 
     @Test
     void handle_UserIsNotRegistered() {
-        when(userService.findUserById(2L)).thenReturn(Optional.empty());
-        CommandHandler listCommand = new ListCommand(userService);
+        when(chatService.existsById(1L)).thenReturn(false);
+        CommandHandler listCommand = new ListCommand(chatService, trackableLinkService);
 
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, "User is not registered.");
@@ -54,10 +54,11 @@ class ListCommandTest {
 
     @Test
     void handle_UserHasNoLinks() {
-        when(userService.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        CommandHandler listCommand = new ListCommand(userService);
+        when(chatService.existsById(1L)).thenReturn(true);
+        when(trackableLinkService.getTrackableLinks(1L)).thenReturn(List.of());
+        CommandHandler listCommand = new ListCommand(chatService, trackableLinkService);
 
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, "There are no tracked links.")
@@ -67,14 +68,11 @@ class ListCommandTest {
 
     @Test
     void handle_UserHasTrackingLinks() {
-        User user = new User(2L);
-        Set<Link> links = user.getLinks();
-        links.add(new Link("url1", "host"));
-        links.add(new Link("url2", "host"));
-        when(userService.findUserById(2L)).thenReturn(Optional.of(user));
-        CommandHandler listCommand = new ListCommand(userService);
+        when(chatService.existsById(1)).thenReturn(true);
+        when(trackableLinkService.getTrackableLinks(1L)).thenReturn(List.of("url1", "url2"));
+        CommandHandler listCommand = new ListCommand(chatService, trackableLinkService);
 
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         SendMessage actualMessage = listCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, """

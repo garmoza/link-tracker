@@ -3,11 +3,9 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.entity.User;
 import edu.java.bot.mock.MockUpdateUtils;
-import edu.java.bot.service.TrackedLinkService;
-import edu.java.bot.service.UserService;
-import java.util.Optional;
+import edu.java.bot.service.ChatService;
+import edu.java.bot.service.TrackableLinkService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -23,13 +21,13 @@ import static org.mockito.Mockito.when;
 class UntrackCommandTest {
 
     @Mock
-    private UserService userService;
+    private ChatService chatService;
     @Mock
-    private TrackedLinkService trackedLinkService;
+    private TrackableLinkService trackableLinkService;
 
     @Test
     void command() {
-        CommandHandler untrackCommand = new UntrackCommand(userService, trackedLinkService);
+        CommandHandler untrackCommand = new UntrackCommand(chatService, trackableLinkService);
 
         String actualCommand = untrackCommand.command();
 
@@ -38,7 +36,7 @@ class UntrackCommandTest {
 
     @Test
     void description() {
-        CommandHandler untrackCommand = new UntrackCommand(userService, trackedLinkService);
+        CommandHandler untrackCommand = new UntrackCommand(chatService, trackableLinkService);
 
         String actualDescription = untrackCommand.description();
 
@@ -47,12 +45,12 @@ class UntrackCommandTest {
 
     @Test
     void authorizedHandle_SuccessUntrackLink() {
-        when(trackedLinkService.isTrackableLink(any())).thenReturn(true);
-        when(trackedLinkService.untrackLink(any(), any())).thenReturn(true);
-        UntrackCommand untrackCommand = new UntrackCommand(userService, trackedLinkService);
+        when(trackableLinkService.isTrackableLink(any())).thenReturn(true);
+        when(trackableLinkService.unsubscribe(1L, "https://example.com/")).thenReturn(true);
+        UntrackCommand untrackCommand = new UntrackCommand(chatService, trackableLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/untrack https://example.com/", 1L);
-        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, 1L);
 
         SendMessage expectedMessage = new SendMessage(1L, "Link *https://example.com/* no longer tracked.")
             .parseMode(ParseMode.Markdown);
@@ -61,13 +59,12 @@ class UntrackCommandTest {
 
     @Test
     void authorizedHandle_LinkAlreadyNotTracked() {
-        when(trackedLinkService.isTrackableLink(any())).thenReturn(true);
-        when(trackedLinkService.untrackLink(any(), any())).thenReturn(false);
-        UntrackCommand untrackCommand = new UntrackCommand(userService, trackedLinkService);
+        when(trackableLinkService.isTrackableLink(any())).thenReturn(true);
+        when(trackableLinkService.unsubscribe(1L, "https://example.com/")).thenReturn(false);
+        UntrackCommand untrackCommand = new UntrackCommand(chatService, trackableLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/untrack https://example.com/", 1L);
-        User user = new User(2L);
-        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, user);
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, 1L);
 
         SendMessage expectedMessage = new SendMessage(1L, "Tracking link not found.")
             .parseMode(ParseMode.Markdown);
@@ -76,10 +73,10 @@ class UntrackCommandTest {
 
     @Test
     void authorizedHandle_WrongFormat_NoParameters() {
-        UntrackCommand untrackCommand = new UntrackCommand(userService, trackedLinkService);
+        UntrackCommand untrackCommand = new UntrackCommand(chatService, trackableLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/untrack", 1L);
-        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, 1L);
 
         SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */untrack URL* format.")
             .parseMode(ParseMode.Markdown);
@@ -88,10 +85,10 @@ class UntrackCommandTest {
 
     @Test
     void authorizedHandle_WrongFormat_ManyParameters() {
-        UntrackCommand untrackCommand = new UntrackCommand(userService, trackedLinkService);
+        UntrackCommand untrackCommand = new UntrackCommand(chatService, trackableLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/untrack link1 link2", 1L);
-        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, 1L);
 
         SendMessage expectedMessage = new SendMessage(1L, "Pls, enter the command in */untrack URL* format.")
             .parseMode(ParseMode.Markdown);
@@ -100,10 +97,10 @@ class UntrackCommandTest {
 
     @Test
     void authorizedHandle_NotValidURL() {
-        UntrackCommand untrackCommand = new UntrackCommand(userService, trackedLinkService);
+        UntrackCommand untrackCommand = new UntrackCommand(chatService, trackableLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/track not-valid-URL", 1L);
-        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, 1L);
 
         SendMessage expectedMessage = new SendMessage(1L, "Impossible to parse URL.")
             .parseMode(ParseMode.Markdown);
@@ -112,11 +109,11 @@ class UntrackCommandTest {
 
     @Test
     void authorizedHandle_ResourceNotSupported() {
-        when(trackedLinkService.isTrackableLink(any())).thenReturn(false);
-        UntrackCommand untrackCommand = new UntrackCommand(userService, trackedLinkService);
+        when(trackableLinkService.isTrackableLink(any())).thenReturn(false);
+        UntrackCommand untrackCommand = new UntrackCommand(chatService, trackableLinkService);
 
         Update updateMock = MockUpdateUtils.getUpdateMock("/track https://example.com/", 1L);
-        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, new User(2L));
+        SendMessage actualMessage = untrackCommand.authorizedHandle(updateMock, 1L);
 
         SendMessage expectedMessage = new SendMessage(1L, "Resource not supported.")
             .parseMode(ParseMode.Markdown);
@@ -125,12 +122,12 @@ class UntrackCommandTest {
 
     @Test
     void handle_NotCallAuthorizedHandle_WhenUserNotFound() {
-        UntrackCommand untrackCommand = spy(new UntrackCommand(userService, trackedLinkService));
-        when(userService.findUserById(2L)).thenReturn(Optional.empty());
+        UntrackCommand untrackCommand = spy(new UntrackCommand(chatService, trackableLinkService));
+        when(chatService.existsById(1L)).thenReturn(false);
 
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         untrackCommand.handle(updateMock);
 
-        verify(untrackCommand, never()).authorizedHandle(any(Update.class), any(User.class));
+        verify(untrackCommand, never()).authorizedHandle(any(Update.class), any(Long.class));
     }
 }

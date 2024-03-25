@@ -2,7 +2,7 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.service.UserService;
+import edu.java.bot.service.ChatService;
 import edu.java.bot.util.SendMessageFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class StartCommand implements CommandHandler {
 
-    private final UserService userService;
+    private final ChatService chatService;
     private final List<CommandHandler> commandHandlers;
 
-    public StartCommand(UserService userService, @Lazy List<CommandHandler> commandHandlers) {
-        this.userService = userService;
+    public StartCommand(ChatService chatService, @Lazy List<CommandHandler> commandHandlers) {
+        this.chatService = chatService;
         this.commandHandlers = commandHandlers;
     }
 
@@ -33,8 +33,8 @@ public class StartCommand implements CommandHandler {
 
     @Override
     public SendMessage handle(Update update) {
-        long userId = update.message().from().id();
-        userService.saveUser(userId);
+        long chatId = update.message().chat().id();
+        chatService.registerChat(chatId);
         return getStartMessage(update);
     }
 

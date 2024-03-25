@@ -1,6 +1,5 @@
 package edu.java.bot.util;
 
-import edu.java.bot.entity.Link;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class LinkParserTest {
 
     @Test
-    void parse_CheckHost() throws URLParseException {
-        Link link = LinkParser.parse("https://github.com/sanyarnd/tinkoff-java-course-2023/");
+    void parse() throws URLParseException {
+        String link = LinkParser.parse("https://github.com/sanyarnd/tinkoff-java-course-2023/");
 
-        assertEquals("github.com", link.getHost());
+        assertEquals("https://github.com/sanyarnd/tinkoff-java-course-2023/", link);
     }
 
     @Test

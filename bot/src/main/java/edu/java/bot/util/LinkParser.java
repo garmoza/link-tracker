@@ -1,6 +1,5 @@
 package edu.java.bot.util;
 
-import edu.java.bot.entity.Link;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,8 +10,8 @@ public class LinkParser {
     private LinkParser() {
     }
 
-    public static Link parse(String url) throws URLParseException {
-        return new Link(parseURL(url));
+    public static String parse(String url) throws URLParseException {
+        return parseURL(url).toString();
     }
 
     private static URL parseURL(String url) throws URLParseException {

@@ -2,10 +2,8 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.entity.Link;
-import edu.java.bot.entity.User;
-import edu.java.bot.service.TrackedLinkService;
-import edu.java.bot.service.UserService;
+import edu.java.bot.service.ChatService;
+import edu.java.bot.service.TrackableLinkService;
 import edu.java.bot.util.LinkParser;
 import edu.java.bot.util.SendMessageFormatter;
 import edu.java.bot.util.URLParseException;
@@ -16,8 +14,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UntrackCommand extends AuthorizedCommand {
 
-    private final UserService userService;
-    private final TrackedLinkService trackedLinkService;
+    private final ChatService chatService;
+    private final TrackableLinkService trackableLinkService;
 
     @Override
     public String command() {
@@ -30,7 +28,7 @@ public class UntrackCommand extends AuthorizedCommand {
     }
 
     @Override
-    SendMessage authorizedHandle(Update update, User user) {
+    SendMessage authorizedHandle(Update update, long chatId) {
         String[] params = update.message().text().split(" ");
 
         SendMessageFormatter formatter = new SendMessageFormatter(update);
@@ -39,7 +37,7 @@ public class UntrackCommand extends AuthorizedCommand {
             formatter.append("Pls, enter the command in *%s URL* format.", command());
         }
 
-        Link link = null;
+        String link = null;
         if (formatter.isEmpty()) {
             try {
                 link = LinkParser.parse(params[1]);
@@ -48,11 +46,11 @@ public class UntrackCommand extends AuthorizedCommand {
             }
         }
 
-        if (formatter.isEmpty() && !trackedLinkService.isTrackableLink(link)) {
+        if (formatter.isEmpty() && !trackableLinkService.isTrackableLink(link)) {
             formatter.append("Resource not supported.");
         }
 
-        if (formatter.isEmpty() && !trackedLinkService.untrackLink(user, link)) {
+        if (formatter.isEmpty() && !trackableLinkService.unsubscribe(chatId, link)) {
             formatter.append("Tracking link not found.");
         }
 
@@ -64,7 +62,7 @@ public class UntrackCommand extends AuthorizedCommand {
     }
 
     @Override
-    UserService getUserService() {
-        return userService;
+    ChatService getChatService() {
+        return chatService;
     }
 }

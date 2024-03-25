@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.CommandHandler;
-import edu.java.bot.entity.Link;
 import java.util.Collection;
 
 public class SendMessageFormatter {
@@ -31,9 +30,9 @@ public class SendMessageFormatter {
         }
     }
 
-    public void appendLinkList(Collection<Link> links) {
+    public void appendLinkList(Collection<String> links) {
         for (var link : links) {
-            builder.append("- %s\n".formatted(link.getUrl()));
+            builder.append("- %s\n".formatted(link));
         }
     }
 
