@@ -18,6 +18,14 @@ public class JpaTgChatService implements TgChatService {
     private final TgChatRepository tgChatRepository;
 
     @Override
+    public ResponseEntity<Void> getChat(long id) {
+        if (tgChatRepository.existsById(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @Override
     public ResponseEntity<Void> registerChat(long id) {
         if (tgChatRepository.existsById(id)) {
             throw new TgChatAlreadyExistsException();

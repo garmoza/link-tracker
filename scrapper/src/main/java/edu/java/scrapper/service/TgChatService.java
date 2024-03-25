@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 
 public interface TgChatService {
 
+    ResponseEntity<Void> getChat(long id);
+
     ResponseEntity<Void> registerChat(long id);
 
     ResponseEntity<List<TgChatResponse>> getAllChats();

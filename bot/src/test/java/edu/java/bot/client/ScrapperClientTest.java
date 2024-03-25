@@ -24,6 +24,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.notFound;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
@@ -45,6 +46,29 @@ class ScrapperClientTest {
     @DynamicPropertySource
     private static void botClientProperties(DynamicPropertyRegistry registry) {
         registry.add("app.client.scrapper-api-url", wireMock::baseUrl);
+    }
+
+    @Test
+    void getChat_Ok() {
+        wireMock.stubFor(get("/tg-chat/1")
+            .willReturn(ok()));
+
+        Mono<Void> result = scrapperClient.getChat(1L);
+
+        StepVerifier.create(result)
+            .verifyComplete();
+    }
+
+    @Test
+    void getChat_NotFound() {
+        wireMock.stubFor(get("/tg-chat/1")
+            .willReturn(notFound()));
+
+        Mono<Void> result = scrapperClient.getChat(1L);
+
+        StepVerifier.create(result)
+            .expectError(WebClientResponseException.class)
+            .verify();
     }
 
     @Test

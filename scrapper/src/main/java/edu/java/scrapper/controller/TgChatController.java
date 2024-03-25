@@ -15,6 +15,11 @@ public class TgChatController implements TgChatControllerApi {
     private final TgChatService tgChatService;
 
     @Override
+    public ResponseEntity<Void> getChat(Long id) {
+        return tgChatService.getChat(id);
+    }
+
+    @Override
     public ResponseEntity<Void> registerChat(Long id) {
         return tgChatService.registerChat(id);
     }
