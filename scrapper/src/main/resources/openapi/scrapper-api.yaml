@@ -26,6 +26,25 @@ paths:
                   $ref: '#/components/schemas/TgChatResponse'
 
   /tg-chat/{id}:
+    get:
+      tags:
+        - TgChatController
+      summary: Получить чат
+      operationId: getChat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: Чат зарегистрирован
+        '404':
+          description: Чат не найден
+
     post:
       tags:
         - TgChatController

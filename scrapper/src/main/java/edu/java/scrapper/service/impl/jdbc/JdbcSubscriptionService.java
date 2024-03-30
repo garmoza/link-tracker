@@ -1,4 +1,4 @@
-package edu.java.scrapper.service.impl;
+package edu.java.scrapper.service.impl.jdbc;
 
 import edu.java.model.request.AddLinkRequest;
 import edu.java.model.request.RemoveLinkRequest;
@@ -11,18 +11,16 @@ import edu.java.scrapper.entity.mapper.SubscriptionModelMapper;
 import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
-import edu.java.scrapper.repository.SubscriptionRepository;
-import edu.java.scrapper.repository.TgChatRepository;
-import edu.java.scrapper.repository.TrackableLinkRepository;
+import edu.java.scrapper.repository.jdbc.SubscriptionRepository;
+import edu.java.scrapper.repository.jdbc.TgChatRepository;
+import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
 import edu.java.scrapper.service.SubscriptionService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
 public class JdbcSubscriptionService implements SubscriptionService {
 
@@ -52,8 +50,7 @@ public class JdbcSubscriptionService implements SubscriptionService {
 
         Subscription subscription = subscriptionRepository.subscribe(
             Subscription.builder()
-                .chatId(chat.getId())
-                .linkUrl(link.getUrl())
+                .id(new Subscription.Id(chat.getId(), link.getUrl()))
                 .lastUpdate(link.getLastChange())
                 .build()
         );
@@ -64,10 +61,11 @@ public class JdbcSubscriptionService implements SubscriptionService {
     }
 
     private TrackableLink addTrackableLink(String url) {
+        var now = OffsetDateTime.now();
         TrackableLink link = TrackableLink.builder()
             .url(url)
-            .lastChange(OffsetDateTime.now())
-            .lastCrawl(OffsetDateTime.now())
+            .lastChange(now)
+            .lastCrawl(now)
             .build();
         return trackableLinkRepository.add(link);
     }

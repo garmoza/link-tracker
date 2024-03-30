@@ -7,6 +7,7 @@ app:
     github-api-url: ${GITHUB_API_URL:https://api.github.com}
     stackoverflow-api-url: ${STACKOVERFLOW_API_URL:https://api.stackexchange.com/2.3}
     bot-api-url: ${BOT_API_URL:http://localhost:8090}
+  database-access-type: jpa
 
 spring:
   application:
@@ -17,6 +18,8 @@ spring:
     password: ${DB_PASSWORD:postgres}
   liquibase:
     enabled: false
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 server:
   port: 8080

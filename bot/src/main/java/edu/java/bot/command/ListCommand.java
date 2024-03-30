@@ -2,11 +2,10 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.entity.Link;
-import edu.java.bot.entity.User;
-import edu.java.bot.service.UserService;
+import edu.java.bot.service.ChatService;
+import edu.java.bot.service.TrackableLinkService;
 import edu.java.bot.util.SendMessageFormatter;
-import java.util.Set;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ListCommand extends AuthorizedCommand {
 
-    private final UserService userService;
+    private final ChatService chatService;
+    private final TrackableLinkService trackableLinkService;
 
     @Override
     public String command() {
@@ -27,10 +27,10 @@ public class ListCommand extends AuthorizedCommand {
     }
 
     @Override
-    public SendMessage authorizedHandle(Update update, User user) {
+    public SendMessage authorizedHandle(Update update, long chatId) {
         SendMessageFormatter formatter = new SendMessageFormatter(update);
 
-        Set<Link> links = user.getLinks();
+        List<String> links = trackableLinkService.getTrackableLinks(chatId);
         if (links.isEmpty()) {
             formatter.append("There are no tracked links.");
         } else {
@@ -42,7 +42,7 @@ public class ListCommand extends AuthorizedCommand {
     }
 
     @Override
-    UserService getUserService() {
-        return userService;
+    ChatService getChatService() {
+        return chatService;
     }
 }

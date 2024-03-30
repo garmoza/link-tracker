@@ -1,4 +1,4 @@
-package edu.java.scrapper.repository;
+package edu.java.scrapper.repository.jpa;
 
 import edu.java.scrapper.IntegrationTest;
 import edu.java.scrapper.entity.TgChat;
@@ -21,8 +21,8 @@ class TgChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void add() {
-        tgChatRepository.add(new TgChat(1L));
+    void save() {
+        tgChatRepository.save(new TgChat(1L));
 
         List<TgChat> actual = tgChatRepository.findAll();
 
@@ -34,7 +34,7 @@ class TgChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void findById_Found() {
-        tgChatRepository.add(new TgChat(1L));
+        tgChatRepository.save(new TgChat(1L));
 
         Optional<TgChat> actual = tgChatRepository.findById(1L);
 
@@ -55,7 +55,7 @@ class TgChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void existsById_ReturnsTrue() {
-        tgChatRepository.add(new TgChat(1L));
+        tgChatRepository.save(new TgChat(1L));
 
         boolean exists = tgChatRepository.existsById(1L);
 
@@ -75,8 +75,8 @@ class TgChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void findAll() {
-        tgChatRepository.add(new TgChat(1L));
-        tgChatRepository.add(new TgChat(2L));
+        tgChatRepository.save(new TgChat(1L));
+        tgChatRepository.save(new TgChat(2L));
 
         List<TgChat> actual = tgChatRepository.findAll();
 
@@ -90,10 +90,10 @@ class TgChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void remove() {
-        tgChatRepository.add(new TgChat(1L));
+    void deleteById() {
+        tgChatRepository.save(new TgChat(1L));
 
-        tgChatRepository.remove(1L);
+        tgChatRepository.deleteById(1L);
 
         boolean isDeleted = !tgChatRepository.existsById(1L);
         assertThat(isDeleted).as("checks that Telegram chat has been deleted").isTrue();

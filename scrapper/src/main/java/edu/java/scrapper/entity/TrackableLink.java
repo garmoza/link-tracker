@@ -1,5 +1,9 @@
 package edu.java.scrapper.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
@@ -8,14 +12,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "trackable_link")
 public class TrackableLink {
+    @Id
+    @Column(name = "url")
     private String url;
+    @Column(name = "last_change")
     private OffsetDateTime lastChange;
+    @Column(name = "last_crawl")
     private OffsetDateTime lastCrawl;
 
     @Override public boolean equals(Object o) {

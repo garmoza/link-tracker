@@ -1,23 +1,29 @@
-package edu.java.scrapper.service.impl;
+package edu.java.scrapper.service.impl.jdbc;
 
 import edu.java.model.response.TgChatResponse;
 import edu.java.scrapper.entity.TgChat;
 import edu.java.scrapper.entity.mapper.TgChatModelMapper;
 import edu.java.scrapper.exception.TgChatAlreadyExistsException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
-import edu.java.scrapper.repository.TgChatRepository;
+import edu.java.scrapper.repository.jdbc.TgChatRepository;
 import edu.java.scrapper.service.TgChatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class JdbcTgChatService implements TgChatService {
 
     private final TgChatRepository tgChatRepository;
+
+    @Override
+    public ResponseEntity<Void> getChat(long id) {
+        if (tgChatRepository.existsById(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
     @Override
     public ResponseEntity<Void> registerChat(long id) {

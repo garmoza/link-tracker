@@ -20,6 +20,14 @@ public class ScrapperClientImpl extends AbstractWebClient implements ScrapperCli
     }
 
     @Override
+    public Mono<Void> getChat(long id) {
+        return webClient.get()
+            .uri(TG_CHAT_ENDPOINT, id)
+            .retrieve()
+            .bodyToMono(Void.class);
+    }
+
+    @Override
     public Mono<Void> registerChat(long id) {
         return webClient.post()
             .uri(TG_CHAT_ENDPOINT, id)

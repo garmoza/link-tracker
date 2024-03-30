@@ -1,33 +1,40 @@
-package edu.java.scrapper.service.impl;
+package edu.java.scrapper.service.impl.jpa;
 
 import edu.java.model.request.LinkUpdate;
 import edu.java.scrapper.client.BotClient;
 import edu.java.scrapper.entity.Subscription;
 import edu.java.scrapper.entity.TrackableLink;
-import edu.java.scrapper.repository.SubscriptionRepository;
-import edu.java.scrapper.repository.TrackableLinkRepository;
+import edu.java.scrapper.repository.jpa.SubscriptionRepository;
+import edu.java.scrapper.repository.jpa.TrackableLinkRepository;
 import edu.java.scrapper.service.UpdateService;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
-public class JdbcUpdateService implements UpdateService {
+public class JpaUpdateService implements UpdateService {
 
     private final TrackableLinkRepository trackableLinkRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final BotClient botClient;
 
     @Override
+    public List<TrackableLink> getAllLinksNeedToCrawling(OffsetDateTime time) {
+        return trackableLinkRepository.findAllByLastCrawlOlder(time);
+    }
+
+    @Override
     @Transactional
     public void update(TrackableLink link) {
-        trackableLinkRepository.update(link);
-        List<Subscription> updatedSubs = subscriptionRepository.updateOldByUrl(link.getUrl(), link.getLastChange());
+        trackableLinkRepository.save(link);
+        List<Subscription> subsToUpdate =
+            subscriptionRepository.findAllByUrlAndOlderLastChange(link.getUrl(), link.getLastChange());
+        Iterable<Subscription> updatedSubs = subscriptionRepository.saveAll(subsToUpdate);
 
-        List<Long> tgChatIds = updatedSubs.stream()
-            .map(Subscription::getChatId)
+        List<Long> tgChatIds = StreamSupport.stream(updatedSubs.spliterator(), false)
+            .map(sub -> sub.getId().getChatId())
             .toList();
         LinkUpdate linkUpdate = LinkUpdate.builder()
             .url(link.getUrl())

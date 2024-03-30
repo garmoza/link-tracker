@@ -2,10 +2,8 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.entity.User;
 import edu.java.bot.mock.MockUpdateUtils;
-import edu.java.bot.service.UserService;
-import java.util.Optional;
+import edu.java.bot.service.ChatService;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
@@ -19,11 +17,11 @@ class AuthorizedCommandTest {
     @Test
     void handle_UserNotFound() {
         AuthorizedCommand authorizedCommand = mock(AuthorizedCommand.class, CALLS_REAL_METHODS);
-        UserService userService = mock(UserService.class);
-        when(userService.findUserById(2L)).thenReturn(Optional.empty());
-        when(authorizedCommand.getUserService()).thenReturn(userService);
+        ChatService chatService = mock(ChatService.class);
+        when(chatService.existsById(1L)).thenReturn(false);
+        when(authorizedCommand.getChatService()).thenReturn(chatService);
 
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         SendMessage actualMessage = authorizedCommand.handle(updateMock);
 
         SendMessage expectedMessage = new SendMessage(1L, "User is not registered.");
@@ -33,16 +31,16 @@ class AuthorizedCommandTest {
     @Test
     void handle_UserExist() {
         AuthorizedCommand authorizedCommand = mock(AuthorizedCommand.class, CALLS_REAL_METHODS);
-        UserService userService = mock(UserService.class);
-        when(userService.findUserById(2L)).thenReturn(Optional.of(new User(2L)));
-        when(authorizedCommand.getUserService()).thenReturn(userService);
+        ChatService chatService = mock(ChatService.class);
+        when(chatService.existsById(1L)).thenReturn(true);
+        when(authorizedCommand.getChatService()).thenReturn(chatService);
         SendMessage expectedMessage = new SendMessage(1L, "Test message");
-        when(authorizedCommand.authorizedHandle(any(Update.class), any(User.class))).thenReturn(expectedMessage);
+        when(authorizedCommand.authorizedHandle(any(Update.class), any(Long.class))).thenReturn(expectedMessage);
 
-        Update updateMock = MockUpdateUtils.getUpdateMock(1L, 2L);
+        Update updateMock = MockUpdateUtils.getUpdateMock(1L);
         SendMessage actualMessage = authorizedCommand.handle(updateMock);
 
-        verify(authorizedCommand).authorizedHandle(any(Update.class), any(User.class));
+        verify(authorizedCommand).authorizedHandle(any(Update.class), any(Long.class));
         assertEquals(expectedMessage.getParameters(), actualMessage.getParameters());
     }
 }

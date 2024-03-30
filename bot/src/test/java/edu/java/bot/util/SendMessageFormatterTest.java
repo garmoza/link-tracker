@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.CommandHandler;
-import edu.java.bot.entity.Link;
 import edu.java.bot.mock.MockCommandUtils;
 import edu.java.bot.mock.MockUpdateUtils;
 import java.util.List;
@@ -70,12 +69,9 @@ class SendMessageFormatterTest {
 
     @Test
     void appendLinkList() {
-        Link link1 = new Link("url1", "host1");
-        Link link2 = new Link("url2", "host2");
-
         Update update = MockUpdateUtils.getUpdateMock(1L, 2L);
         SendMessageFormatter formatter = new SendMessageFormatter(update);
-        formatter.appendLinkList(List.of(link1, link2));
+        formatter.appendLinkList(List.of("url1", "url2"));
         SendMessage actualMessage = formatter.getMessage();
 
         SendMessage expectedMessage = new SendMessage(1L, """

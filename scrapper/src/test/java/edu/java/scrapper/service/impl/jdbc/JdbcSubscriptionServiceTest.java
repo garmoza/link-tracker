@@ -1,4 +1,4 @@
-package edu.java.scrapper.service.impl;
+package edu.java.scrapper.service.impl.jdbc;
 
 import edu.java.model.request.AddLinkRequest;
 import edu.java.model.request.RemoveLinkRequest;
@@ -10,9 +10,9 @@ import edu.java.scrapper.entity.TrackableLink;
 import edu.java.scrapper.exception.LinkAlreadyExistsException;
 import edu.java.scrapper.exception.LinkNotFoundException;
 import edu.java.scrapper.exception.TgChatNotFoundException;
-import edu.java.scrapper.repository.SubscriptionRepository;
-import edu.java.scrapper.repository.TgChatRepository;
-import edu.java.scrapper.repository.TrackableLinkRepository;
+import edu.java.scrapper.repository.jdbc.SubscriptionRepository;
+import edu.java.scrapper.repository.jdbc.TgChatRepository;
+import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -43,8 +43,14 @@ class JdbcSubscriptionServiceTest {
     @Test
     void getAllLinksByChatId() {
         when(subscriptionRepository.findAllByChatId(1L)).thenReturn(List.of(
-            new Subscription(1L, "https://example1.com", OffsetDateTime.parse("2024-03-17T12:00:00Z")),
-            new Subscription(1L, "https://example2.com", OffsetDateTime.parse("2024-03-17T13:00:00Z"))
+            new Subscription(
+                new Subscription.Id(1L, "https://example1.com"),
+                OffsetDateTime.parse("2024-03-17T12:00:00Z")
+            ),
+            new Subscription(
+                new Subscription.Id(1L, "https://example2.com"),
+                OffsetDateTime.parse("2024-03-17T13:00:00Z")
+            )
         ));
 
         var actual = subscriptionService.getAllLinksByChatId(1L);
@@ -74,8 +80,7 @@ class JdbcSubscriptionServiceTest {
         when(subscriptionRepository.existsByTgChatAndTrackableLink(any(), any())).thenReturn(false);
         when(subscriptionRepository.subscribe(any())).thenReturn(
             Subscription.builder()
-                .chatId(1L)
-                .linkUrl("https://example.com")
+                .id(new Subscription.Id(1L, "https://example.com"))
                 .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
                 .build()
         );
@@ -131,8 +136,7 @@ class JdbcSubscriptionServiceTest {
         when(subscriptionRepository.existsByTgChatAndTrackableLink(any(), any())).thenReturn(false);
         when(subscriptionRepository.subscribe(any())).thenReturn(
             Subscription.builder()
-                .chatId(1L)
-                .linkUrl("https://example.com")
+                .id(new Subscription.Id(1L, "https://example.com"))
                 .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
                 .build()
         );
@@ -198,14 +202,12 @@ class JdbcSubscriptionServiceTest {
         ));
         when(subscriptionRepository.findByTgChatAndTrackableLink(any(), any())).thenReturn(Optional.of(
             Subscription.builder()
-                .linkUrl("https://example.com")
-                .chatId(1L)
+                .id(new Subscription.Id(1L, "https://example.com"))
                 .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
                 .build()
         ));
         when(subscriptionRepository.unsubscribe(any())).thenReturn(Subscription.builder()
-            .chatId(1L)
-            .linkUrl("https://example.com")
+            .id(new Subscription.Id(1L, "https://example.com"))
             .lastUpdate(OffsetDateTime.parse("2024-03-17T12:00:00Z"))
             .build()
         );

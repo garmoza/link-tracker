@@ -8,6 +8,8 @@ import reactor.core.publisher.Mono;
 
 public interface ScrapperClient {
 
+    Mono<Void> getChat(long id);
+
     Mono<Void> registerChat(long id);
 
     Mono<Void> deleteChat(long id);

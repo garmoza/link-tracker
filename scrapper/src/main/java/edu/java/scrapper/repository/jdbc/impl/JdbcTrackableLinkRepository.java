@@ -1,7 +1,7 @@
-package edu.java.scrapper.repository.impl.jdbc;
+package edu.java.scrapper.repository.jdbc.impl;
 
 import edu.java.scrapper.entity.TrackableLink;
-import edu.java.scrapper.repository.TrackableLinkRepository;
+import edu.java.scrapper.repository.jdbc.TrackableLinkRepository;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
